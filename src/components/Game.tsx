@@ -28,7 +28,7 @@ export interface GameProps {
   xIsNext: boolean;
 }
 
-const Game: React.FC<GameProps> = () => {
+const Game: React.FC = () => {
   const [history, setHistory] = useState([
     {
       squares: Array(9).fill('')
