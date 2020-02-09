@@ -8,7 +8,7 @@ export interface HomeProps {
 }
 
 const Home: React.SFC<HomeProps> = ({ googleLogin, currentUser }) => {
-  return currentUser?.uid !== null ? (
+  return currentUser !== null ? (
     <Redirect to={'/tasks'} />
   ) : (
     <div>

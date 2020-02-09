@@ -7,7 +7,7 @@ interface AuthProps {
 }
 
 const Auth: React.SFC<AuthProps> = ({ currentUser, children }) => {
-  return currentUser?.uid !== null ? <>{children}</> : <Redirect to={'/'} />;
+  return currentUser !== null ? <>{children}</> : <Redirect to={'/'} />;
 };
 
 export default Auth;
