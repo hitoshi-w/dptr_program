@@ -1,8 +1,6 @@
 import React from 'react';
 
-export interface AuthProps {}
-
-const Auth: React.SFC<AuthProps> = () => {
+const Auth: React.SFC = () => {
   return <div></div>;
 };
 

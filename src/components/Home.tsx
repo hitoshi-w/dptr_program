@@ -1,9 +1,15 @@
 import React from 'react';
 
-export interface HomeProps {}
+export interface HomeProps {
+  googleLogin: () => void;
+}
 
-const Home: React.SFC<HomeProps> = () => {
-  return <div></div>;
+const Home: React.SFC<HomeProps> = ({ googleLogin }) => {
+  return (
+    <div>
+      <button onClick={googleLogin}>google</button>
+    </div>
+  );
 };
 
 export default Home;

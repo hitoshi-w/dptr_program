@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
-import Home from 'components/Home';
+import Home from 'containers/Home';
 import Auth from 'components/Auth';
 import TaskIndex from 'components/TaskIndex';
 
