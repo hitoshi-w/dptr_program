@@ -1,12 +1,7 @@
 import React from 'react';
-import Game from './components/Game';
 
 const App: React.FC = () => {
-  return (
-    <div className="App">
-      <Game />
-    </div>
-  );
+  return <div className="App"></div>;
 };
 
 export default App;
