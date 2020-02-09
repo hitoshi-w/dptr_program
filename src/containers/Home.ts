@@ -1,14 +1,18 @@
 import { connect } from 'react-redux';
-import { Dispatch } from 'redux';
 import fb from 'config/fbConfig';
-// import { googleLogin } from 'reducers/authReducer';
-import Home from 'components/Home';
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
+import Home from 'components/Home';
+import { RootState } from 'reducers/rootReducer';
+
+const mapStateToProps = (state: RootState) => ({
+  currentUser: state.authReducer.user,
+});
+
+const mapDispatchToProps = () => ({
   googleLogin: async () => {
     const provider = new fb.auth.GoogleAuthProvider();
     await fb.auth().signInWithRedirect(provider);
   },
 });
 
-export default connect(null, mapDispatchToProps)(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -1,8 +1,8 @@
 import { RootState } from 'reducers/rootReducer';
-import fb from 'config/fbConfig';
+import { User } from 'App';
 
 interface AuthState {
-  user: fb.User | null;
+  user: User;
 }
 const initAuth: AuthState = {
   user: null,
@@ -15,7 +15,7 @@ export const AuthActions = {
 } as const;
 
 //action creators
-export const loggedIn = (user: fb.User | null) => ({
+export const loggedIn = (user: User) => ({
   type: AuthActions.LOGIN_SUCCESS as typeof AuthActions.LOGIN_SUCCESS,
   payload: user,
 });

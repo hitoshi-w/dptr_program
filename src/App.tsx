@@ -2,23 +2,24 @@ import React, { useEffect } from 'react';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import fb from 'config/fbConfig';
 
-import Home from 'containers/Home';
-import Auth from 'components/Auth';
+import Home from 'containers/home';
+import Auth from 'containers/auth';
 import TaskIndex from 'components/TaskIndex';
 
+export type User = fb.User | null;
+
 interface AppProps {
-  loggedIn: (user: fb.User | null) => void;
+  loggedIn: (user: User) => void;
   loggedOut: () => void;
-  currentUser: fb.User | null;
+  currentUser: User;
 }
 
-const App: React.SFC<AppProps> = ({ loggedIn, loggedOut, currentUser }) => {
+const App: React.FC<AppProps> = ({ loggedIn, loggedOut }) => {
   useEffect(() => {
     fb.auth().onAuthStateChanged(user => {
       user ? loggedIn(user) : loggedOut();
     });
   }, [loggedIn, loggedOut]);
-  console.log(currentUser);
 
   return (
     <BrowserRouter>
