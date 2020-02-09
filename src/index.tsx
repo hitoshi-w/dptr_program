@@ -9,7 +9,7 @@ import createSagaMiddleware from 'redux-saga';
 import 'firebase/firestore';
 import fb from 'config/fbConfig';
 
-import App from 'App';
+import App from 'containers/app';
 import { rootReducer } from 'reducers/rootReducer';
 import rootSaga from 'saga/rootSaga';
 import * as serviceWorker from 'serviceWorker';
