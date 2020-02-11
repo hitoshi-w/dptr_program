@@ -4,6 +4,7 @@ import Footer from 'components/layouts/Footer';
 import { UserEntity } from 'reducers/userReducer';
 
 import Fab from '@material-ui/core/Fab';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import styled from 'styled-components';
 
 export interface HomeProps {
@@ -26,7 +27,7 @@ const Home: React.SFC<HomeProps> = ({
   return currentUser !== null ? (
     <Redirect to={'/tasks'} />
   ) : isFetching ? (
-    <p>Loading</p>
+    <LinearProgress />
   ) : (
     <>
       <HomeContainer>
