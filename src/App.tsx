@@ -10,19 +10,11 @@ import { UserEntity } from 'reducers/userReducer';
 
 interface AppProps {
   currentUser: UserEntity | null;
-  getUser: () => void;
-  isFetching: boolean;
   loggedIn: (currentUser: UserEntity) => void;
   loggedOut: () => void;
 }
 
-const App: React.FC<AppProps> = ({
-  getUser,
-  currentUser,
-  isFetching,
-  loggedIn,
-  loggedOut,
-}) => {
+const App: React.FC<AppProps> = ({ currentUser, loggedIn, loggedOut }) => {
   useEffect(() => {
     fb.auth().onAuthStateChanged(user => {
       if (user) {

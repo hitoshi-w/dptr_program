@@ -1,8 +1,9 @@
 import { TaskActionTypes } from 'reducers/taskReducer';
+import { UserActionTypes } from 'reducers/userReducer';
 import { RootState } from 'reducers/rootReducer';
 import _ from 'lodash';
 
-type actionsType = TaskActionTypes;
+type actionsType = TaskActionTypes | UserActionTypes;
 
 interface LoadingState {
   [key: string]: boolean;
