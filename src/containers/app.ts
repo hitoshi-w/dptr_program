@@ -1,18 +1,17 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import fb from 'config/fbConfig';
 
-import { loggedIn, loggedOut } from 'reducers/authReducer';
+import { loggedOut, loggedIn, UserEntity } from 'reducers/userReducer';
 import { RootState } from 'reducers/rootReducer';
 import App from 'App';
 
 const mapStateToProps = (state: RootState) => ({
-  currentUser: state.authReducer.user,
+  currentUser: state.userReducer.user,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  loggedIn: (user: fb.User | null) => dispatch(loggedIn(user)),
   loggedOut: () => dispatch(loggedOut()),
+  loggedIn: (data: UserEntity) => dispatch(loggedIn(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
