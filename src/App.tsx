@@ -12,16 +12,29 @@ interface AppProps {
   currentUser: UserEntity | null;
   getUser: () => void;
   isFetching: boolean;
+  loggedIn: (currentUser: UserEntity) => void;
+  loggedOut: () => void;
 }
 
-const App: React.FC<AppProps> = ({ getUser, currentUser, isFetching }) => {
+const App: React.FC<AppProps> = ({
+  getUser,
+  currentUser,
+  isFetching,
+  loggedIn,
+  loggedOut,
+}) => {
   useEffect(() => {
-    getUser();
-  }, [getUser]);
+    fb.auth().onAuthStateChanged(user => {
+      if (user) {
+        const currentUser = { [user.uid]: { name: user.displayName } };
+        loggedIn(currentUser);
+      } else {
+        loggedOut();
+      }
+    });
+  }, [loggedIn, loggedOut]);
 
-  return isFetching ? (
-    <p>loading</p>
-  ) : (
+  return (
     <BrowserRouter>
       <div className="App">
         <Switch>

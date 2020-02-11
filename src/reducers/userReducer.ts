@@ -1,7 +1,7 @@
 import { RootState } from 'reducers/rootReducer';
 
 export interface UserEntity {
-  [key: string]: { name: string };
+  [key: string]: { name: string | null };
 }
 
 interface UserState {
@@ -16,8 +16,8 @@ const initUser: UserState = {
 export const UserActions = {
   GET_USER_REQUEST: 'GET_USER_REQUEST',
   GET_USER_SUCCESS: 'GET_USER_SUCCESS',
-  // LOGIN_SUCCESS: 'LOGIN_SUCCESS',
-  LOGOUT: 'LOGOUT',
+  LOGGEDIN: 'LOGGEDIN',
+  LOGGEDOUT: 'LOGGEDOUT',
 } as const;
 
 //action creators
@@ -31,34 +31,35 @@ export const getUser = {
   }),
 };
 
-// export const loggedIn = (user: UserEntity) => ({
-//   type: UserActions.LOGIN_SUCCESS as typeof UserActions.LOGIN_SUCCESS,
-//   payload: user,
-// });
+export const loggedIn = (currentUser: UserEntity) => ({
+  type: UserActions.LOGGEDIN as typeof UserActions.LOGGEDIN,
+  payload: currentUser,
+});
 
 export const loggedOut = () => {
   return {
-    type: UserActions.LOGOUT as typeof UserActions.LOGOUT,
+    type: UserActions.LOGGEDOUT as typeof UserActions.LOGGEDOUT,
     payload: null,
   };
 };
 
 //action types
-export type AuthActionTypes =
+export type UserActionTypes =
   | ReturnType<typeof getUser.request>
   | ReturnType<typeof getUser.success>
-  // | ReturnType<typeof loggedIn>
+  | ReturnType<typeof loggedIn>
   | ReturnType<typeof loggedOut>;
 
 //reducer
 export const userReducer = (
   state = initUser,
-  action: AuthActionTypes,
+  action: UserActionTypes,
 ): UserState => {
   switch (action.type) {
+    case UserActions.LOGGEDIN:
     case UserActions.GET_USER_SUCCESS:
       return { ...state, user: action.payload };
-    case UserActions.LOGOUT:
+    case UserActions.LOGGEDOUT:
       return { ...state, user: null };
     default:
       return state;
