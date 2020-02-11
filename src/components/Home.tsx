@@ -1,6 +1,10 @@
 import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
+import Footer from 'components/layouts/Footer';
 import { UserEntity } from 'reducers/userReducer';
+
+import Fab from '@material-ui/core/Fab';
+import styled from 'styled-components';
 
 export interface HomeProps {
   currentUser: UserEntity | null;
@@ -24,10 +28,30 @@ const Home: React.SFC<HomeProps> = ({
   ) : isFetching ? (
     <p>Loading</p>
   ) : (
-    <div>
-      <button onClick={googleLogin}>google</button>
-    </div>
+    <>
+      <HomeContainer>
+        <h1>T a s k a</h1>
+        <Fab variant="extended" onClick={googleLogin}>
+          Googleではじめる
+        </Fab>
+      </HomeContainer>
+      <FooterContainer>
+        <Footer />
+      </FooterContainer>
+    </>
   );
 };
+
+const HomeContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+`;
+
+const FooterContainer = styled.div`
+  align-self: center;
+`;
 
 export default Home;

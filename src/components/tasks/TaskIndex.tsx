@@ -7,7 +7,7 @@ interface TaskIndexProps {
   readTasks: () => void;
 }
 
-const TaskIndex: React.FC<TaskIndexProps> = ({ tasks, readTasks }) => {
+const TaskIndex: React.SFC<TaskIndexProps> = ({ tasks, readTasks }) => {
   useEffect(() => {
     readTasks();
   }, [readTasks]);
