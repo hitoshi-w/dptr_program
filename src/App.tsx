@@ -5,7 +5,7 @@ import fb from 'config/fbConfig';
 import Navbar from 'containers/navbar';
 import Home from 'containers/home';
 import Auth from 'containers/auth';
-import TaskIndex from 'components/TaskIndex';
+import TaskIndex from 'containers/tasks/taskIndex';
 
 export type User = fb.User | null;
 
