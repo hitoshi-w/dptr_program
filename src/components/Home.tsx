@@ -1,9 +1,9 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { User } from 'App';
+import { UserEntity } from 'reducers/userReducer';
 
 export interface HomeProps {
-  currentUser: User;
+  currentUser: UserEntity | null;
   googleLogin: () => void;
 }
 

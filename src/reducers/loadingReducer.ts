@@ -4,7 +4,14 @@ import _ from 'lodash';
 
 type actionsType = TaskActionTypes;
 
-export const loadingReducer = (state = {}, action: actionsType) => {
+interface LoadingState {
+  [key: string]: boolean;
+}
+
+export const loadingReducer = (
+  state = {},
+  action: actionsType,
+): LoadingState => {
   const { type } = action;
   const matches = /(.*)_(REQUEST|SUCCESS|FAILURE)/.exec(type);
 
@@ -21,5 +28,5 @@ export const loadingReducer = (state = {}, action: actionsType) => {
 export const createLoadingSelector = (actions: string[]) => (
   state: RootState,
 ) => {
-  return _(actions).some(action => _.get(state, `api.loading.${action}`));
+  return _(actions).some(action => _.get(state.loadingReducer, `${action}`));
 };

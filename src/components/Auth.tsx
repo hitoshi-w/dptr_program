@@ -1,9 +1,9 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { User } from 'App';
+import { UserEntity } from 'reducers/userReducer';
 
 interface AuthProps {
-  currentUser: User;
+  currentUser: UserEntity | null;
 }
 
 const Auth: React.SFC<AuthProps> = ({ currentUser, children }) => {

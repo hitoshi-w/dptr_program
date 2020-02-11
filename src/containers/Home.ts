@@ -5,7 +5,7 @@ import Home from 'components/Home';
 import { RootState } from 'reducers/rootReducer';
 
 const mapStateToProps = (state: RootState) => ({
-  currentUser: state.authReducer.user,
+  currentUser: state.userReducer.user,
 });
 
 const mapDispatchToProps = () => ({

@@ -3,7 +3,7 @@ import { RootState } from 'reducers/rootReducer';
 import Auth from 'components/Auth';
 
 const mapStateToProps = (state: RootState) => ({
-  currentUser: state.authReducer.user,
+  currentUser: state.userReducer.user,
 });
 
 export default connect(mapStateToProps)(Auth);
