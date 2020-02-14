@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import 'typeface-roboto';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import 'index.css';
-import styled from 'styled-components';
 
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
