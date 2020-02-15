@@ -18,14 +18,18 @@ export type TaskForm = {
   priority: string;
 };
 
-const TaskNew: React.FC = () => {
+export interface TaskNewProps {
+  createTask: (params: TaskForm) => void;
+}
+
+const TaskNew: React.FC<TaskNewProps> = ({ createTask }) => {
   const { register, handleSubmit } = useForm<TaskForm>();
   const onSubmit = handleSubmit(({ title, staff, priority }) => {
-    console.log(title, staff, priority);
+    createTask({ title, staff, priority });
   });
 
   return (
-    <Forma onSubmit={onSubmit}>
+    <Form onSubmit={onSubmit}>
       <h2>タスク作成</h2>
       <TextField inputRef={register} label="タスク" name="title" />
       <TextField inputRef={register} label="担当者" name="staff" />
@@ -58,11 +62,11 @@ const TaskNew: React.FC = () => {
       <Button variant="contained" color="primary" type="submit">
         作成
       </Button>
-    </Forma>
+    </Form>
   );
 };
 
-const Forma = styled.form`
+const Form = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
