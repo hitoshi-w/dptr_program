@@ -16,7 +16,7 @@ interface AppProps {
   loggedOut: () => void;
 }
 
-const App: React.FC<AppProps> = ({ currentUser, loggedIn, loggedOut }) => {
+const App: React.FC<AppProps> = ({ loggedIn, loggedOut }) => {
   useEffect(() => {
     fb.auth().onAuthStateChanged(user => {
       if (user) {

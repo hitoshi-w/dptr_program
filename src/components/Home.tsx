@@ -11,23 +11,16 @@ export interface HomeProps {
   currentUser: UserEntity | null;
   googleLogin: () => void;
   getUser: () => void;
-  isFetching: boolean;
+  // isFetching: boolean;
 }
 
-const Home: React.SFC<HomeProps> = ({
-  currentUser,
-  getUser,
-  isFetching,
-  googleLogin,
-}) => {
+const Home: React.SFC<HomeProps> = ({ currentUser, getUser, googleLogin }) => {
   useEffect(() => {
     getUser();
   }, [getUser]);
 
   return currentUser !== null ? (
     <Redirect to={'/tasks'} />
-  ) : isFetching ? (
-    <LinearProgress />
   ) : (
     <>
       <HomeContainer>
