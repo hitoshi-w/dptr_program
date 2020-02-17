@@ -1,6 +1,4 @@
-import { Dispatch } from 'redux';
-import { db } from 'index';
-import { RootState } from 'reducers/rootReducer';
+import { TaskForm } from 'components/tasks/TaskNew';
 
 export interface TaskEntity {
   [key: string]: { title: string };
@@ -17,6 +15,8 @@ const initTask: TaskState = {
 export const TaskActions = {
   READ_TASKS_REQUEST: 'READ_TASKS_REQUEST',
   READ_TASKS_SUCCESS: 'READ_TASKS_SUCCESS',
+  CREATE_TASK_REQUEST: 'CREATE_TASK_REQUEST',
+  CREATE_TASK_SUCCESS: 'CREATE_TASK_SUCCESS',
 } as const;
 
 //action creators
@@ -30,9 +30,22 @@ export const readTasks = {
   }),
 };
 
+export const createTask = {
+  request: (params: TaskForm) => ({
+    type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_REQUEST,
+    payload: params,
+  }),
+  success: (result: TaskEntity) => ({
+    type: TaskActions.CREATE_TASK_SUCCESS as typeof TaskActions.CREATE_TASK_SUCCESS,
+    payload: result,
+  }),
+};
+
 export type TaskActionTypes =
   | ReturnType<typeof readTasks.request>
-  | ReturnType<typeof readTasks.success>;
+  | ReturnType<typeof readTasks.success>
+  | ReturnType<typeof createTask.request>
+  | ReturnType<typeof createTask.success>;
 
 //reducers
 export const taskReducer = (
@@ -40,6 +53,7 @@ export const taskReducer = (
   action: TaskActionTypes,
 ): TaskState => {
   switch (action.type) {
+    case TaskActions.CREATE_TASK_SUCCESS:
     case TaskActions.READ_TASKS_SUCCESS:
       return { ...state, tasks: action.payload };
     default:

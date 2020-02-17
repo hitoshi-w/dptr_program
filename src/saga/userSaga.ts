@@ -7,4 +7,9 @@ function* runGetUser() {
   yield put(getUser.success(data));
 }
 
-export const watchUser = [takeLatest(UserActions.GET_USER_REQUEST, runGetUser)];
+function* watchUser() {
+  takeLatest(UserActions.GET_USER_REQUEST, runGetUser);
+}
+// export const watchUser = [takeLatest(UserActions.GET_USER_REQUEST, runGetUser)];
+
+export default watchUser;
