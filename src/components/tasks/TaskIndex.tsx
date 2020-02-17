@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import ModalForm from 'components/layouts/ModalForm';
-import { TaskEntity } from 'reducers/taskReducer';
+import { Project } from 'reducers/taskReducer';
+import { User } from 'reducers/userReducer';
 
 interface TaskIndexProps {
-  tasks: TaskEntity;
-  readTasks: () => void;
+  project: Project[];
+  currentUser: User;
+  readProject: (currentUser: User) => void;
 }
 
-const TaskIndex: React.FC<TaskIndexProps> = ({ tasks, readTasks }) => {
+const TaskIndex: React.FC<TaskIndexProps> = ({
+  project,
+  readProject,
+  currentUser,
+}) => {
   useEffect(() => {
-    readTasks();
-  }, [readTasks]);
+    readProject(currentUser);
+  }, [readProject, currentUser]);
+  console.log(project);
 
   return (
     <>
       <ModalForm />
-      <div>
-        {tasks &&
-          Object.keys(tasks).map(key => {
-            return <div key={key}>{`${tasks[key].title}`}</div>;
-          })}
-      </div>
+      <div></div>
     </>
   );
 };

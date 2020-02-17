@@ -18,14 +18,12 @@ export type TaskForm = {
   priority: string;
 };
 
-export interface TaskNewProps {
-  createTask: (params: TaskForm) => void;
-}
+export interface TaskNewProps {}
 
-const TaskNew: React.FC<TaskNewProps> = ({ createTask }) => {
+const TaskNew: React.FC<TaskNewProps> = () => {
   const { register, handleSubmit } = useForm<TaskForm>();
   const onSubmit = handleSubmit(({ title, staff, priority }) => {
-    createTask({ title, staff, priority });
+    // createTask({ title, staff, priority });
   });
 
   return (

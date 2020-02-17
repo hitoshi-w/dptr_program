@@ -1,61 +1,90 @@
 import { TaskForm } from 'components/tasks/TaskNew';
+import { User } from 'reducers/userReducer';
 
-export interface TaskEntity {
-  [key: string]: { title: string };
+// export interface Task {
+//   [key: string]: { title: string };
+// }
+
+// interface TaskState {
+//   tasks: Task;
+// }
+
+// const initTask: TaskState = {
+//   tasks: {},
+// };
+
+export interface Task {
+  content: string;
+  priority: string;
+  staff: string;
 }
 
-interface TaskState {
-  tasks: TaskEntity;
+export interface Project {
+  projectStatus: string;
+  tasks: Task[];
 }
 
-const initTask: TaskState = {
-  tasks: {},
+interface ProjectState {
+  project: Project[];
+}
+
+const initProject: ProjectState = {
+  project: [
+    { projectStatus: '未着手', tasks: [] },
+    { projectStatus: '途中', tasks: [] },
+    { projectStatus: '完了', tasks: [] },
+  ],
 };
+
 //actions
-export const TaskActions = {
-  READ_TASKS_REQUEST: 'READ_TASKS_REQUEST',
-  READ_TASKS_SUCCESS: 'READ_TASKS_SUCCESS',
-  CREATE_TASK_REQUEST: 'CREATE_TASK_REQUEST',
-  CREATE_TASK_SUCCESS: 'CREATE_TASK_SUCCESS',
+export const ProjectActions = {
+  READ_PROJECT_REQUEST: 'READ_PROJECT_REQUEST',
+  READ_PROJECT_SUCCESS: 'READ_PROJECT_SUCCESS',
+  // READ_TASKS_REQUEST: 'READ_TASKS_REQUEST',
+  // READ_TASKS_SUCCESS: 'READ_TASKS_SUCCESS',
+  // CREATE_TASK_REQUEST: 'CREATE_TASK_REQUEST',
+  // CREATE_TASK_SUCCESS: 'CREATE_TASK_SUCCESS',
 } as const;
 
 //action creators
-export const readTasks = {
-  request: () => ({
-    type: TaskActions.READ_TASKS_REQUEST as typeof TaskActions.READ_TASKS_REQUEST,
+export const readProject = {
+  request: (currentUser: User) => ({
+    type: ProjectActions.READ_PROJECT_REQUEST as typeof ProjectActions.READ_PROJECT_REQUEST,
+    payload: currentUser,
   }),
-  success: (result: TaskEntity) => ({
-    type: TaskActions.READ_TASKS_SUCCESS as typeof TaskActions.READ_TASKS_SUCCESS,
+  success: (result: Project[]) => ({
+    type: ProjectActions.READ_PROJECT_SUCCESS as typeof ProjectActions.READ_PROJECT_SUCCESS,
     payload: result,
   }),
 };
 
-export const createTask = {
-  request: (params: TaskForm) => ({
-    type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_REQUEST,
-    payload: params,
-  }),
-  success: (result: TaskEntity) => ({
-    type: TaskActions.CREATE_TASK_SUCCESS as typeof TaskActions.CREATE_TASK_SUCCESS,
-    payload: result,
-  }),
-};
+// export const createTask = {
+//   request: (params: TaskForm) => ({
+//     type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_REQUEST,
+//     payload: params,
+//   }),
+//   success: (result: Task) => ({
+//     type: TaskActions.CREATE_TASK_SUCCESS as typeof TaskActions.CREATE_TASK_SUCCESS,
+//     payload: result,
+//   }),
+// };
 
 export type TaskActionTypes =
-  | ReturnType<typeof readTasks.request>
-  | ReturnType<typeof readTasks.success>
-  | ReturnType<typeof createTask.request>
-  | ReturnType<typeof createTask.success>;
+  | ReturnType<typeof readProject.request>
+  | ReturnType<typeof readProject.success>;
+// | ReturnType<typeof readTasks.request>
+// | ReturnType<typeof readTasks.success>
+// | ReturnType<typeof createTask.request>
+// | ReturnType<typeof createTask.success>;
 
 //reducers
 export const taskReducer = (
-  state = initTask,
+  state = initProject,
   action: TaskActionTypes,
-): TaskState => {
+): ProjectState => {
   switch (action.type) {
-    case TaskActions.CREATE_TASK_SUCCESS:
-    case TaskActions.READ_TASKS_SUCCESS:
-      return { ...state, tasks: action.payload };
+    case ProjectActions.READ_PROJECT_SUCCESS:
+      return { ...state, project: action.payload };
     default:
       return state;
   }

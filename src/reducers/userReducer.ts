@@ -1,11 +1,9 @@
 import { RootState } from 'reducers/rootReducer';
 
-export interface UserEntity {
-  [key: string]: { name: string | null };
-}
+export type User = { id: string; name: string | null } | null;
 
 interface UserState {
-  user: UserEntity | null;
+  user: User;
 }
 
 const initUser: UserState = {
@@ -25,13 +23,13 @@ export const getUser = {
   request: () => ({
     type: UserActions.GET_USER_REQUEST as typeof UserActions.GET_USER_REQUEST,
   }),
-  success: (result: UserEntity) => ({
+  success: (result: User) => ({
     type: UserActions.GET_USER_SUCCESS as typeof UserActions.GET_USER_SUCCESS,
     payload: result,
   }),
 };
 
-export const loggedIn = (currentUser: UserEntity) => ({
+export const loggedIn = (currentUser: User) => ({
   type: UserActions.LOGGEDIN as typeof UserActions.LOGGEDIN,
   payload: currentUser,
 });
