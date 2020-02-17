@@ -18,9 +18,7 @@ export type TaskForm = {
   priority: string;
 };
 
-export interface TaskNewProps {}
-
-const TaskNew: React.FC<TaskNewProps> = () => {
+const TaskNew: React.FC = () => {
   const { register, handleSubmit } = useForm<TaskForm>();
   const onSubmit = handleSubmit(({ title, staff, priority }) => {
     // createTask({ title, staff, priority });

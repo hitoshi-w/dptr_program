@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import ModalForm from 'components/layouts/ModalForm';
+import TaskProgress from 'components/tasks/TaskProgress';
 import { Project } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
 
@@ -22,7 +23,11 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
   return (
     <>
       <ModalForm />
-      <div></div>
+      <div>
+        {project.map((ele, i) => (
+          <TaskProgress key={i} {...ele} />
+        ))}
+      </div>
     </>
   );
 };

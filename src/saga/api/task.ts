@@ -30,7 +30,7 @@ export const readProject = async (currentUser: User) => {
 
   const projectData = await docRef.collection('project').get();
   projectData.docs.forEach(doc => {
-    resData.push({ projectStatus: doc.id, tasks: doc.data().tasks });
+    resData.push({ taskStatus: doc.id, tasks: doc.data().tasks });
   });
 
   return resData;

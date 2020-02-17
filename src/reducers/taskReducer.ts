@@ -20,7 +20,7 @@ export interface Task {
 }
 
 export interface Project {
-  projectStatus: string;
+  taskStatus: string;
   tasks: Task[];
 }
 
@@ -30,9 +30,9 @@ interface ProjectState {
 
 const initProject: ProjectState = {
   project: [
-    { projectStatus: '未着手', tasks: [] },
-    { projectStatus: '途中', tasks: [] },
-    { projectStatus: '完了', tasks: [] },
+    { taskStatus: '未着手', tasks: [] },
+    { taskStatus: '途中', tasks: [] },
+    { taskStatus: '完了', tasks: [] },
   ],
 };
 
