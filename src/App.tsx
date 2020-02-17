@@ -5,26 +5,32 @@ import fb from 'config/fbConfig';
 import Navbar from 'containers/navbar';
 import Home from 'containers/home';
 import Auth from 'containers/auth';
-import TaskIndex from 'components/TaskIndex';
+import TaskIndex from 'containers/tasks/taskIndex';
+import { UserEntity } from 'reducers/userReducer';
 
-export type User = fb.User | null;
+import styled from 'styled-components';
 
 interface AppProps {
-  loggedIn: (user: User) => void;
+  currentUser: UserEntity | null;
+  loggedIn: (currentUser: UserEntity) => void;
   loggedOut: () => void;
-  currentUser: User;
 }
 
-const App: React.FC<AppProps> = ({ loggedIn, loggedOut }) => {
+const App: React.FC<AppProps> = ({ currentUser, loggedIn, loggedOut }) => {
   useEffect(() => {
     fb.auth().onAuthStateChanged(user => {
-      user ? loggedIn(user) : loggedOut();
+      if (user) {
+        const currentUser = { [user.uid]: { name: user.displayName } };
+        loggedIn(currentUser);
+      } else {
+        loggedOut();
+      }
     });
   }, [loggedIn, loggedOut]);
 
   return (
     <BrowserRouter>
-      <div className="App">
+      <AppContainer>
         <Switch>
           <Route exact path="/" component={Home} />
           <Auth>
@@ -32,9 +38,15 @@ const App: React.FC<AppProps> = ({ loggedIn, loggedOut }) => {
             <Route path="/tasks" component={TaskIndex} />
           </Auth>
         </Switch>
-      </div>
+      </AppContainer>
     </BrowserRouter>
   );
 };
+
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: inherit;
+`;
 
 export default App;

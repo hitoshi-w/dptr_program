@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'typeface-roboto';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import 'index.css';
 
 import { Provider } from 'react-redux';
@@ -21,6 +23,7 @@ saga.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={store}>
+    <CssBaseline />
     <App />
   </Provider>,
   document.getElementById('root'),

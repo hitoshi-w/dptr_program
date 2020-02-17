@@ -1,6 +1,12 @@
 import { combineReducers } from 'redux';
-import { authReducer } from 'reducers/authReducer';
+import { userReducer } from 'reducers/userReducer';
+import { taskReducer } from 'reducers/taskReducer';
+import { loadingReducer } from 'reducers/loadingReducer';
 
-export const rootReducer = combineReducers({ authReducer });
+export const rootReducer = combineReducers({
+  userReducer,
+  taskReducer,
+  loadingReducer,
+});
 
 export type RootState = ReturnType<typeof rootReducer>;
