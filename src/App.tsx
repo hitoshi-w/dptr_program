@@ -6,22 +6,23 @@ import Navbar from 'containers/navbar';
 import Home from 'containers/home';
 import Auth from 'containers/auth';
 import TaskIndex from 'containers/tasks/taskIndex';
-import { UserEntity } from 'reducers/userReducer';
+import { User } from 'reducers/userReducer';
 
 import styled from 'styled-components';
 
 interface AppProps {
-  currentUser: UserEntity | null;
-  loggedIn: (currentUser: UserEntity) => void;
+  loggedIn: (currentUser: User) => void;
   loggedOut: () => void;
+  readProject: (currentUser: User) => void;
 }
 
-const App: React.FC<AppProps> = ({ currentUser, loggedIn, loggedOut }) => {
+const App: React.FC<AppProps> = ({ loggedIn, loggedOut, readProject }) => {
   useEffect(() => {
     fb.auth().onAuthStateChanged(user => {
       if (user) {
-        const currentUser = { [user.uid]: { name: user.displayName } };
+        const currentUser = { id: user.uid, name: user.displayName };
         loggedIn(currentUser);
+        readProject(currentUser);
       } else {
         loggedOut();
       }

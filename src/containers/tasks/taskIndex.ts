@@ -3,14 +3,17 @@ import { Dispatch } from 'redux';
 
 import TaskIndex from 'components/tasks/TaskIndex';
 import { RootState } from 'reducers/rootReducer';
-import { readTasks } from 'reducers/taskReducer';
+// import { readProject } from 'reducers/taskReducer';
+import { User } from 'reducers/userReducer';
 
 const mapStateToProps = (state: RootState) => ({
-  tasks: state.taskReducer.tasks,
+  project: state.taskReducer.project,
+  currentUser: state.userReducer.user,
 });
 
-const mapDispatchToProps = (dispatch: Dispatch) => ({
-  readTasks: () => dispatch(readTasks.request()),
-});
+// const mapDispatchToProps = (dispatch: Dispatch) => ({
+//   readProject: (currentUser: User) =>
+//     dispatch(readProject.request(currentUser)),
+// });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TaskIndex);
+export default connect(mapStateToProps)(TaskIndex);
