@@ -10,21 +10,15 @@ import styled from 'styled-components';
 export interface HomeProps {
   currentUser: User;
   googleLogin: () => void;
-  getUser: () => void;
-  // isFetching: boolean;
 }
 
-const Home: React.SFC<HomeProps> = ({ currentUser, getUser, googleLogin }) => {
-  useEffect(() => {
-    getUser();
-  }, [getUser]);
-
+const Home: React.SFC<HomeProps> = ({ currentUser, googleLogin }) => {
   return currentUser !== null ? (
     <Redirect to={'/tasks'} />
   ) : (
     <>
       <HomeContainer>
-        <h1>T a s k a</h1>
+        <h1>Taska</h1>
         <Fab variant="extended" onClick={googleLogin}>
           Googleではじめる
         </Fab>

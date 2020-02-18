@@ -16,21 +16,25 @@ export const readProject = async (currentUser: User) => {
     const newTask = docRef
       .collection('project')
       .doc('未着手')
-      .set({ tasks: [] });
+      .set({ id: 0, tasks: [] });
     const wip = await docRef
       .collection('project')
       .doc('途中')
-      .set({ tasks: [] });
+      .set({ id: 1, tasks: [] });
     const done = docRef
       .collection('project')
       .doc('完了')
-      .set({ tasks: [] });
+      .set({ id: 2, tasks: [] });
     await Promise.all([newTask, wip, done]);
   }
 
   const projectData = await docRef.collection('project').get();
   projectData.docs.forEach(doc => {
-    resData.push({ taskStatus: doc.id, tasks: doc.data().tasks });
+    resData.push({
+      taskStatus: doc.id,
+      id: doc.data().id,
+      tasks: doc.data().tasks,
+    });
   });
 
   return resData;

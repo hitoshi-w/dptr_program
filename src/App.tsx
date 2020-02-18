@@ -11,17 +11,18 @@ import { User } from 'reducers/userReducer';
 import styled from 'styled-components';
 
 interface AppProps {
-  currentUser: User;
   loggedIn: (currentUser: User) => void;
   loggedOut: () => void;
+  readProject: (currentUser: User) => void;
 }
 
-const App: React.FC<AppProps> = ({ loggedIn, loggedOut }) => {
+const App: React.FC<AppProps> = ({ loggedIn, loggedOut, readProject }) => {
   useEffect(() => {
     fb.auth().onAuthStateChanged(user => {
       if (user) {
         const currentUser = { id: user.uid, name: user.displayName };
         loggedIn(currentUser);
+        readProject(currentUser);
       } else {
         loggedOut();
       }

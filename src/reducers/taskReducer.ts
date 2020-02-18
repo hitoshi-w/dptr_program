@@ -1,18 +1,6 @@
 import { TaskForm } from 'components/tasks/TaskNew';
 import { User } from 'reducers/userReducer';
 
-// export interface Task {
-//   [key: string]: { title: string };
-// }
-
-// interface TaskState {
-//   tasks: Task;
-// }
-
-// const initTask: TaskState = {
-//   tasks: {},
-// };
-
 export interface Task {
   content: string;
   priority: string;
@@ -20,6 +8,7 @@ export interface Task {
 }
 
 export interface Project {
+  id: number;
   taskStatus: string;
   tasks: Task[];
 }
@@ -30,9 +19,9 @@ interface ProjectState {
 
 const initProject: ProjectState = {
   project: [
-    { taskStatus: '未着手', tasks: [] },
-    { taskStatus: '途中', tasks: [] },
-    { taskStatus: '完了', tasks: [] },
+    { id: 0, taskStatus: '未着手', tasks: [] },
+    { id: 1, taskStatus: '途中', tasks: [] },
+    { id: 2, taskStatus: '完了', tasks: [] },
   ],
 };
 
@@ -40,10 +29,6 @@ const initProject: ProjectState = {
 export const ProjectActions = {
   READ_PROJECT_REQUEST: 'READ_PROJECT_REQUEST',
   READ_PROJECT_SUCCESS: 'READ_PROJECT_SUCCESS',
-  // READ_TASKS_REQUEST: 'READ_TASKS_REQUEST',
-  // READ_TASKS_SUCCESS: 'READ_TASKS_SUCCESS',
-  // CREATE_TASK_REQUEST: 'CREATE_TASK_REQUEST',
-  // CREATE_TASK_SUCCESS: 'CREATE_TASK_SUCCESS',
 } as const;
 
 //action creators
@@ -72,8 +57,6 @@ export const readProject = {
 export type TaskActionTypes =
   | ReturnType<typeof readProject.request>
   | ReturnType<typeof readProject.success>;
-// | ReturnType<typeof readTasks.request>
-// | ReturnType<typeof readTasks.success>
 // | ReturnType<typeof createTask.request>
 // | ReturnType<typeof createTask.success>;
 
@@ -84,7 +67,9 @@ export const taskReducer = (
 ): ProjectState => {
   switch (action.type) {
     case ProjectActions.READ_PROJECT_SUCCESS:
-      return { ...state, project: action.payload };
+      const sortedProject = action.payload.slice();
+      sortedProject.sort((x, y) => (x.id > y.id ? 1 : -1));
+      return { ...state, project: sortedProject };
     default:
       return state;
   }

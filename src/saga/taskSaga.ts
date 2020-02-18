@@ -13,7 +13,3 @@ function* watchProject() {
 }
 
 export default watchProject;
-// export const watchTask = [
-//   takeLatest(TaskActions.READ_TASKS_REQUEST, runReadTasks),
-//   takeLatest(TaskActions.CREATE_TASK_REQUEST, runCreateTask),
-// ];

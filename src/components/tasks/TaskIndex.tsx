@@ -1,35 +1,33 @@
 import React, { useEffect, useState } from 'react';
 import ModalForm from 'components/layouts/ModalForm';
-import TaskProgress from 'components/tasks/TaskProgress';
+import TaskList from 'components/tasks/TaskList';
 import { Project } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
+import styled from 'styled-components';
 
 interface TaskIndexProps {
   project: Project[];
   currentUser: User;
-  readProject: (currentUser: User) => void;
 }
 
-const TaskIndex: React.FC<TaskIndexProps> = ({
-  project,
-  readProject,
-  currentUser,
-}) => {
-  useEffect(() => {
-    readProject(currentUser);
-  }, [readProject, currentUser]);
+const TaskIndex: React.FC<TaskIndexProps> = ({ project, currentUser }) => {
   console.log(project);
 
   return (
     <>
       <ModalForm />
-      <div>
+      <ListsContainer>
         {project.map((ele, i) => (
-          <TaskProgress key={i} {...ele} />
+          <TaskList key={i} {...ele} />
         ))}
-      </div>
+      </ListsContainer>
     </>
   );
 };
+
+const ListsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 export default TaskIndex;
