@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from '@material-ui/core/Modal';
 import styled from 'styled-components';
 
-import TaskNew from 'containers/tasks/taskNew';
+import TaskNew from 'containers/tasks/taskEdit';
 
 const ModalForm: React.FC = () => {
   const [open, setOpen] = useState(false);

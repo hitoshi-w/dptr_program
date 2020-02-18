@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
 import { loggedOut, loggedIn, User } from 'reducers/userReducer';
-import { readProject } from 'reducers/taskReducer';
+import { readAll } from 'reducers/taskReducer';
 import { RootState } from 'reducers/rootReducer';
 import App from 'App';
 
@@ -13,8 +13,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   loggedOut: () => dispatch(loggedOut()),
   loggedIn: (data: User) => dispatch(loggedIn(data)),
-  readProject: (currentUser: User) =>
-    dispatch(readProject.request(currentUser)),
+  readAll: (currentUser: User) => dispatch(readAll.request(currentUser)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);

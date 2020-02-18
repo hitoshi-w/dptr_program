@@ -1,24 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import ModalForm from 'components/layouts/ModalForm';
-import TaskList from 'components/tasks/TaskList';
-import { Project } from 'reducers/taskReducer';
+import TaskList from 'containers/tasks/taskList';
+import { TaskLists } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
 import styled from 'styled-components';
 
 interface TaskIndexProps {
-  project: Project[];
-  currentUser: User;
+  taskLists: TaskLists;
 }
 
-const TaskIndex: React.FC<TaskIndexProps> = ({ project, currentUser }) => {
-  console.log(project);
-
+const TaskIndex: React.FC<TaskIndexProps> = ({ taskLists }) => {
   return (
     <>
       <ModalForm />
       <ListsContainer>
-        {project.map((ele, i) => (
-          <TaskList key={i} {...ele} />
+        {Object.keys(taskLists).map(id => (
+          <TaskList key={id} {...taskLists[parseInt(id)]} />
         ))}
       </ListsContainer>
     </>

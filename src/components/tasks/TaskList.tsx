@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form';
 import Textarea from 'react-textarea-autosize';
 
 import TaskCard from 'components/tasks/TaskCard';
-import { Project, Task } from 'reducers/taskReducer';
+import { Tasks } from 'reducers/taskReducer';
+import { User } from 'reducers/userReducer';
 import {
   TextField,
   Button,
@@ -17,11 +18,35 @@ import {
 } from '@material-ui/core';
 import styled from 'styled-components';
 
-const TaskList: React.SFC<Project> = ({ taskStatus, tasks }) => {
+interface OwnProps {
+  currentUser: User;
+  // createTask: (currentUser: User, params: Tasks) => void;
+}
+
+type TaskListProps = OwnProps & Tasks;
+
+export interface TaskForm {
+  content: string;
+  priority: string;
+  staff: string;
+}
+
+const TaskList: React.SFC<TaskListProps> = ({
+  listId,
+  taskStatus,
+  tasks,
+  // createTask,
+  currentUser,
+}) => {
   const [form, setForm] = useState(false);
-  const { register, handleSubmit } = useForm<Task>();
-  const onSubmit = handleSubmit(({ content }) => {
-    console.log({ content });
+  const { register, handleSubmit } = useForm<TaskForm>();
+  const onSubmit = handleSubmit(({ content, priority, staff }) => {
+    // const params = {
+    //   id: taskList.id,
+    //   taskStatus: taskList.taskStatus,
+    //   tasks: [{ content, priority, staff }],
+    // };
+    // createTask(currentUser, params);
   });
   const handleOpen = () => {
     setForm(true);
@@ -36,7 +61,7 @@ const TaskList: React.SFC<Project> = ({ taskStatus, tasks }) => {
         <_Card>
           <form onSubmit={onSubmit}>
             <_Textarea inputRef={register} name="content" />
-            <TextField inputRef={register} label="担当者" name="content" />
+            <TextField inputRef={register} label="担当者" name="staff" />
             <FormControl component="fieldset">
               <FormLabel component="legend">優先度</FormLabel>
               <RadioGroup
@@ -75,7 +100,9 @@ const TaskList: React.SFC<Project> = ({ taskStatus, tasks }) => {
         </_Card>
 
         <FormButton>
-          <Button variant="contained">タスク作成</Button>
+          <Button type="submit" variant="contained">
+            タスク作成
+          </Button>
           <Button onClick={handleClose} variant="contained">
             キャンセル
           </Button>
@@ -89,8 +116,8 @@ const TaskList: React.SFC<Project> = ({ taskStatus, tasks }) => {
       <h4>{taskStatus}</h4>
       <Icon onClick={handleOpen}>add</Icon>
       {form ? <FormComponent /> : <></>}
-      {tasks.map((task, index) => (
-        <TaskCard key={index} {...task} />
+      {Object.keys(tasks).map(index => (
+        <TaskCard key={index} {...tasks[parseInt(index)]} />
       ))}
     </ListContainer>
   );

@@ -5,7 +5,12 @@ import Typography from '@material-ui/core/Typography';
 import CardContent from '@material-ui/core/CardContent';
 import styled from 'styled-components';
 
-const TaskCard: React.SFC<Task> = ({ content, priority, staff }) => {
+interface TackCardProps {
+  content: string;
+  priority: string;
+  staff: string;
+}
+const TaskCard: React.SFC<TackCardProps> = ({ content, priority, staff }) => {
   return (
     <CardContainer>
       <Card>

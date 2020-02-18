@@ -13,16 +13,16 @@ import styled from 'styled-components';
 interface AppProps {
   loggedIn: (currentUser: User) => void;
   loggedOut: () => void;
-  readProject: (currentUser: User) => void;
+  readAll: (currentUser: User) => void;
 }
 
-const App: React.FC<AppProps> = ({ loggedIn, loggedOut, readProject }) => {
+const App: React.FC<AppProps> = ({ loggedIn, loggedOut, readAll }) => {
   useEffect(() => {
     fb.auth().onAuthStateChanged(user => {
       if (user) {
         const currentUser = { id: user.uid, name: user.displayName };
         loggedIn(currentUser);
-        readProject(currentUser);
+        readAll(currentUser);
       } else {
         loggedOut();
       }

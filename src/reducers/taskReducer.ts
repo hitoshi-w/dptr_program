@@ -1,48 +1,61 @@
-import { TaskForm } from 'components/tasks/TaskNew';
 import { User } from 'reducers/userReducer';
 
 export interface Task {
-  content: string;
-  priority: string;
-  staff: string;
+  [index: number]: { content: string; priority: string; staff: string };
 }
 
-export interface Project {
-  id: number;
+export interface Tasks {
+  listId: number;
   taskStatus: string;
-  tasks: Task[];
+  tasks: Task;
 }
 
-interface ProjectState {
-  project: Project[];
+export interface TaskLists {
+  [id: number]: Tasks;
 }
 
-const initProject: ProjectState = {
-  project: [
-    { id: 0, taskStatus: '未着手', tasks: [] },
-    { id: 1, taskStatus: '途中', tasks: [] },
-    { id: 2, taskStatus: '完了', tasks: [] },
-  ],
+interface TasksState {
+  taskLists: TaskLists;
+}
+
+const initTasks: TasksState = {
+  taskLists: {
+    0: { listId: 0, taskStatus: '未着手', tasks: {} },
+    1: { listId: 1, taskStatus: '途中', tasks: {} },
+    2: { listId: 2, taskStatus: '完了', tasks: {} },
+  },
 };
 
 //actions
-export const ProjectActions = {
-  READ_PROJECT_REQUEST: 'READ_PROJECT_REQUEST',
-  READ_PROJECT_SUCCESS: 'READ_PROJECT_SUCCESS',
+export const TaskActions = {
+  READ_ALL_REQUEST: 'READ_ALL_REQUEST',
+  READ_ALL_SUCCESS: 'READ_ALL_SUCCESS',
+  CREATE_TASK_REQUEST: 'READ_TASK_REQUEST',
+  CREATE_TASK_SUCCESS: 'CREATE_TASK_SUCCESS',
 } as const;
 
 //action creators
-export const readProject = {
+export const readAll = {
   request: (currentUser: User) => ({
-    type: ProjectActions.READ_PROJECT_REQUEST as typeof ProjectActions.READ_PROJECT_REQUEST,
+    type: TaskActions.READ_ALL_REQUEST as typeof TaskActions.READ_ALL_REQUEST,
     payload: currentUser,
   }),
-  success: (result: Project[]) => ({
-    type: ProjectActions.READ_PROJECT_SUCCESS as typeof ProjectActions.READ_PROJECT_SUCCESS,
+  success: (result: TaskLists) => ({
+    type: TaskActions.READ_ALL_SUCCESS as typeof TaskActions.READ_ALL_SUCCESS,
     payload: result,
   }),
 };
 
+export const createTask = {
+  request: (currentUser: User, params: Tasks) => ({
+    type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_REQUEST,
+    payload: { currentUser, params },
+  }),
+  success: (result: Tasks) => ({
+    type: TaskActions.CREATE_TASK_SUCCESS as typeof TaskActions.CREATE_TASK_SUCCESS,
+    payload: result,
+  }),
+};
 // export const createTask = {
 //   request: (params: TaskForm) => ({
 //     type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_REQUEST,
@@ -55,22 +68,37 @@ export const readProject = {
 // };
 
 export type TaskActionTypes =
-  | ReturnType<typeof readProject.request>
-  | ReturnType<typeof readProject.success>;
-// | ReturnType<typeof createTask.request>
-// | ReturnType<typeof createTask.success>;
+  | ReturnType<typeof readAll.request>
+  | ReturnType<typeof readAll.success>
+  | ReturnType<typeof createTask.request>
+  | ReturnType<typeof createTask.success>;
 
 //reducers
 export const taskReducer = (
-  state = initProject,
+  state = initTasks,
   action: TaskActionTypes,
-): ProjectState => {
+): TasksState => {
   switch (action.type) {
-    case ProjectActions.READ_PROJECT_SUCCESS:
-      const sortedProject = action.payload.slice();
-      sortedProject.sort((x, y) => (x.id > y.id ? 1 : -1));
-      return { ...state, project: sortedProject };
+    case TaskActions.READ_ALL_SUCCESS:
+      return { ...state, taskLists: action.payload };
     default:
       return state;
   }
 };
+
+// const newCard = {
+//   id: `card-${cardID}`,
+//   text: action.payload.text,
+// };
+// cardID += 1;
+// const newState = state.map(ele => {
+//   if(ele.id === action.payload.listID) {
+//     return {
+//       ...ele,
+//       cards: [...ele.cards, newCard]
+//     }
+//   }else{
+//     return ele;
+//   }
+// })
+// return newState;
