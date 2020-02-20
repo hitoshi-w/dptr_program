@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Textarea from 'react-textarea-autosize';
-
 import TaskCard from 'components/tasks/TaskCard';
-import { Tasks } from 'reducers/taskReducer';
+import { TaskList, Task } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
 import {
   TextField,
@@ -18,33 +17,25 @@ import {
 } from '@material-ui/core';
 import styled from 'styled-components';
 
-interface OwnProps {
-  currentUser: User;
-  // createTask: (currentUser: User, params: Tasks) => void;
+// interface OwnProps {
+//   currentUser: User;
+//   // createTask: (currentUser: User, params: TaskList) => void;
+// }
+
+interface TaskListsProps {
+  taskList: TaskList;
 }
 
-type TaskListProps = OwnProps & Tasks;
+// type TaskListsProps = OwnProps & TaskList;
 
-export interface TaskForm {
-  content: string;
-  priority: string;
-  staff: string;
-}
-
-const TaskList: React.SFC<TaskListProps> = ({
-  listId,
-  taskStatus,
-  tasks,
-  // createTask,
-  currentUser,
-}) => {
+const TaskLists: React.SFC<TaskListsProps> = ({ taskList }) => {
   const [form, setForm] = useState(false);
-  const { register, handleSubmit } = useForm<TaskForm>();
+  const { register, handleSubmit } = useForm<Task>();
   const onSubmit = handleSubmit(({ content, priority, staff }) => {
     // const params = {
-    //   id: taskList.id,
-    //   taskStatus: taskList.taskStatus,
-    //   tasks: [{ content, priority, staff }],
+    //   listId,
+    //   taskStatus,
+    //   tasks: { content, priority, staff },
     // };
     // createTask(currentUser, params);
   });
@@ -60,7 +51,13 @@ const TaskList: React.SFC<TaskListProps> = ({
       <>
         <_Card>
           <form onSubmit={onSubmit}>
-            <_Textarea inputRef={register} name="content" />
+            <_Textarea
+              autoFocus
+              placeholder="タスクを入力"
+              minRows={4}
+              inputRef={register}
+              name="content"
+            />
             <TextField inputRef={register} label="担当者" name="staff" />
             <FormControl component="fieldset">
               <FormLabel component="legend">優先度</FormLabel>
@@ -100,12 +97,12 @@ const TaskList: React.SFC<TaskListProps> = ({
         </_Card>
 
         <FormButton>
-          <Button type="submit" variant="contained">
+          <_Button type="submit" variant="contained" color="primary">
             タスク作成
-          </Button>
-          <Button onClick={handleClose} variant="contained">
+          </_Button>
+          <_Button onClick={handleClose} variant="contained">
             キャンセル
-          </Button>
+          </_Button>
         </FormButton>
       </>
     );
@@ -113,20 +110,41 @@ const TaskList: React.SFC<TaskListProps> = ({
 
   return (
     <ListContainer>
-      <h4>{taskStatus}</h4>
-      <Icon onClick={handleOpen}>add</Icon>
+      <ListHead>
+        <h2>{taskList.taskStatus}</h2>
+        <Icon onClick={handleOpen}>add</Icon>
+      </ListHead>
       {form ? <FormComponent /> : <></>}
-      {Object.keys(tasks).map(index => (
-        <TaskCard key={index} {...tasks[parseInt(index)]} />
+      {taskList.tasks.map((task, index) => (
+        <TaskCard key={index} {...task} />
       ))}
     </ListContainer>
   );
 };
 
-const FormButton = styled.div`
-  margin-top: 8px;
+const ListHead = styled.div`
   display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: 0 1.2rem;
+  h2 {
+    letter-spacing: 1.6px;
+  }
+  span {
+    font-size: 2.4rem;
+  }
+`;
+
+const FormButton = styled.div`
+  display: flex;
+  margin-top: 8px;
+`;
+
+const _Button = styled(Button)`
+  flex: 1;
+  &:not(:last-child) {
+    margin-right: 4px;
+  }
 `;
 
 const _Card = styled(Card)`
@@ -137,18 +155,22 @@ const _Card = styled(Card)`
 const _Textarea = styled(Textarea)`
   resize: none;
   width: 100%;
-  outline: none;
-  border: none;
+  border: 1px solid var(--color-light-dark-3);
+  border-radius: 3px;
   overflow: hidden;
+  padding: 1rem;
+  line-height: 1.5;
 `;
 
 const ListContainer = styled.div`
+  flex: 1;
   background-color: #dfe3e6;
   border-radius: 3px;
-  width: 300px;
-  height: 100%;
+  height: inherit;
   padding: 8px;
-  margin-right: 8px;
+  &:not(:last-child) {
+    margin-right: 1rem;
+  }
 `;
 
-export default TaskList;
+export default TaskLists;

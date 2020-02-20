@@ -1,8 +1,5 @@
 import React from 'react';
-import { Task } from 'reducers/taskReducer';
-import Card from '@material-ui/core/Card';
-import Typography from '@material-ui/core/Typography';
-import CardContent from '@material-ui/core/CardContent';
+import { Card, Typography, CardContent } from '@material-ui/core';
 import styled from 'styled-components';
 
 interface TackCardProps {
@@ -10,6 +7,7 @@ interface TackCardProps {
   priority: string;
   staff: string;
 }
+
 const TaskCard: React.SFC<TackCardProps> = ({ content, priority, staff }) => {
   return (
     <CardContainer>

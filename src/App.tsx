@@ -8,8 +8,6 @@ import Auth from 'containers/auth';
 import TaskIndex from 'containers/tasks/taskIndex';
 import { User } from 'reducers/userReducer';
 
-import styled from 'styled-components';
-
 interface AppProps {
   loggedIn: (currentUser: User) => void;
   loggedOut: () => void;
@@ -31,23 +29,15 @@ const App: React.FC<AppProps> = ({ loggedIn, loggedOut, readAll }) => {
 
   return (
     <BrowserRouter>
-      <AppContainer>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Auth>
-            <Navbar />
-            <Route path="/tasks" component={TaskIndex} />
-          </Auth>
-        </Switch>
-      </AppContainer>
+      <Switch>
+        <Route exact path="/" component={Home} />
+        <Auth>
+          <Navbar />
+          <Route path="/tasks" component={TaskIndex} />
+        </Auth>
+      </Switch>
     </BrowserRouter>
   );
 };
-
-const AppContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: inherit;
-`;
 
 export default App;

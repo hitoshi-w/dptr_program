@@ -1,14 +1,13 @@
 import { db } from 'index';
-import { Tasks } from 'reducers/taskReducer';
+import { TaskList } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
-
-const resData: Tasks[] = [];
+import _ from 'lodash';
 
 export const readAll = async (currentUser: User) => {
   const docRef = db.collection('taskLists').doc('hello worl');
-  const userData = await docRef.get();
+  const response = await docRef.get();
 
-  if (userData.exists === false) {
+  if (response.exists === false) {
     const newTask = docRef.set(
       { 0: { listId: 0, taskStatus: '未着手', tasks: {} } },
       { merge: true },
@@ -24,16 +23,21 @@ export const readAll = async (currentUser: User) => {
     await Promise.all([newTask, wip, done]);
   }
 
-  const taskData = await docRef.get();
-  return taskData.data();
+  const formattedData = _.values(response.data());
+  formattedData.forEach(e => {
+    e.tasks = _.values(e.tasks);
+  });
+
+  return formattedData;
 };
 
-export const createTask = async (currentUser: User, params: Tasks) => {
-  // const docRef = db
-  //   .collection('users')
-  //   .doc(currentUser?.id)
-  //   .collection('taskList')
-  //   .doc(params.taskStatus)
-  //   .set(params.tasks);
-  // const userData = await docRef.get();
+export const createTask = async (
+  currentUser: User,
+  params: TaskList,
+  sortIndex: number,
+) => {
+  const docRef = db.collection('taskLists').doc('hello worl');
+  const taskData = await docRef.update({
+    [`${params.listId}.tasks.${sortIndex}`]: params.tasks,
+  });
 };

@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import ModalForm from 'components/layouts/ModalForm';
-import TaskList from 'containers/tasks/taskList';
-import { TaskLists } from 'reducers/taskReducer';
-import { User } from 'reducers/userReducer';
+import TaskLists from 'components/tasks/TaskLists';
+import { TaskList } from 'reducers/taskReducer';
 import styled from 'styled-components';
 
 interface TaskIndexProps {
-  taskLists: TaskLists;
+  taskLists: TaskList[];
 }
 
 const TaskIndex: React.FC<TaskIndexProps> = ({ taskLists }) => {
@@ -14,8 +13,8 @@ const TaskIndex: React.FC<TaskIndexProps> = ({ taskLists }) => {
     <>
       <ModalForm />
       <ListsContainer>
-        {Object.keys(taskLists).map(id => (
-          <TaskList key={id} {...taskLists[parseInt(id)]} />
+        {taskLists.map((taskList, listId) => (
+          <TaskLists key={listId} taskList={taskList} />
         ))}
       </ListsContainer>
     </>
@@ -25,6 +24,8 @@ const TaskIndex: React.FC<TaskIndexProps> = ({ taskLists }) => {
 const ListsContainer = styled.div`
   display: flex;
   flex-direction: row;
+  flex-grow: 1;
+  flex-shrink: 0;
 `;
 
 export default TaskIndex;
