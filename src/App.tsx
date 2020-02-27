@@ -25,7 +25,7 @@ const App: React.FC<AppProps> = ({ loggedIn, loggedOut, readAll }) => {
         loggedOut();
       }
     });
-  }, [loggedIn, loggedOut]);
+  }, [loggedIn, loggedOut, readAll]);
 
   return (
     <BrowserRouter>

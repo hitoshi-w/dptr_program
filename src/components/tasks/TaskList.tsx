@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Textarea from 'react-textarea-autosize';
-import TaskCard from 'components/tasks/TaskCard';
+import TaskCard from 'containers/tasks/taskCard';
 import { Task } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
 

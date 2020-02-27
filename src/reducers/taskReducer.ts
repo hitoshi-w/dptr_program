@@ -24,6 +24,8 @@ export const TaskActions = {
   READ_ALL_SUCCESS: 'READ_ALL_SUCCESS',
   CREATE_TASK_REQUEST: 'CREATE_TASK_REQUEST',
   CREATE_TASK_SUCCESS: 'CREATE_TASK_SUCCESS',
+  DELETE_TASK_REQUEST: 'DELETE_TASK_REQUEST',
+  DELETE_TASK_SUCCESS: 'DELETE_TASK_SUCCESS',
 } as const;
 
 //action creators
@@ -49,11 +51,24 @@ export const createTask = {
   }),
 };
 
+export const deleteTask = {
+  request: (currentUser: User, id: number) => ({
+    type: TaskActions.DELETE_TASK_REQUEST as typeof TaskActions.DELETE_TASK_REQUEST,
+    payload: { currentUser, id },
+  }),
+  success: (result: number) => ({
+    type: TaskActions.DELETE_TASK_SUCCESS as typeof TaskActions.DELETE_TASK_SUCCESS,
+    payload: result,
+  }),
+};
+
 export type TaskActionTypes =
   | ReturnType<typeof readAll.request>
   | ReturnType<typeof readAll.success>
   | ReturnType<typeof createTask.request>
-  | ReturnType<typeof createTask.success>;
+  | ReturnType<typeof createTask.success>
+  | ReturnType<typeof deleteTask.request>
+  | ReturnType<typeof deleteTask.success>;
 
 //reducers
 export const taskReducer = (
@@ -72,6 +87,11 @@ export const taskReducer = (
         ...state,
         tasks: [...state.tasks, action.payload],
         taskId: action.payload.id + 1,
+      };
+    case TaskActions.DELETE_TASK_SUCCESS:
+      return {
+        tasks: state.tasks.filter(task => task.id !== action.payload),
+        taskId: state.taskId,
       };
     default:
       return state;

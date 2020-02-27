@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from '@material-ui/core/Modal';
 import styled from 'styled-components';
 
-import TaskNew from 'containers/tasks/taskEdit';
+import TaskEdit from 'containers/tasks/taskEdit';
 
 const ModalForm: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -17,12 +17,9 @@ const ModalForm: React.FC = () => {
 
   return (
     <div>
-      <button type="button" onClick={handleOpen}>
-        新規作成
-      </button>
       <Modal disableAutoFocus={true} open={open} onClose={handleClose}>
         <ModalStyle>
-          <TaskNew />
+          <TaskEdit />
         </ModalStyle>
       </Modal>
     </div>
