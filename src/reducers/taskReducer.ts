@@ -2,39 +2,22 @@ import { User } from 'reducers/userReducer';
 import _ from 'lodash';
 
 export interface Task {
+  id: number;
+  sortIndex: number;
+  statusId: number;
   content: string;
   priority: string;
   staff: string;
 }
 
-export interface TaskList {
-  listId: number;
-  taskStatus: string;
+export interface TaskState {
   tasks: Task[];
-}
-
-interface TaskState {
-  taskLists: TaskList[];
+  totalTask: number;
 }
 
 const initTasks: TaskState = {
-  taskLists: [
-    {
-      listId: 0,
-      taskStatus: '着手',
-      tasks: [],
-    },
-    {
-      listId: 1,
-      taskStatus: '途中',
-      tasks: [],
-    },
-    {
-      listId: 2,
-      taskStatus: '完了',
-      tasks: [],
-    },
-  ],
+  tasks: [],
+  totalTask: 0,
 };
 
 //actions
@@ -51,17 +34,17 @@ export const readAll = {
     type: TaskActions.READ_ALL_REQUEST as typeof TaskActions.READ_ALL_REQUEST,
     payload: currentUser,
   }),
-  success: (result: TaskList[]) => ({
+  success: (result: TaskState) => ({
     type: TaskActions.READ_ALL_SUCCESS as typeof TaskActions.READ_ALL_SUCCESS,
     payload: result,
   }),
 };
 
-const sortIndex = 0;
-export const createTask = (currentUser: User, params: TaskList) => ({
-  type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_SUCCESS,
-  payload: params,
-});
+// const sortIndex = 0;
+// export const createTask = (currentUser: User, params: TaskList) => ({
+//   type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_SUCCESS,
+//   payload: params,
+// });
 // export const createTask = {
 //   request: (currentUser: User, params: TaskList) => ({
 //     type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_REQUEST,
@@ -75,8 +58,8 @@ export const createTask = (currentUser: User, params: TaskList) => ({
 
 export type TaskActionTypes =
   | ReturnType<typeof readAll.request>
-  | ReturnType<typeof readAll.success>
-  | ReturnType<typeof createTask>;
+  | ReturnType<typeof readAll.success>;
+// | ReturnType<typeof createTask>;
 // | ReturnType<typeof createTask.request>
 // | ReturnType<typeof createTask.success>;
 
@@ -87,7 +70,11 @@ export const taskReducer = (
 ): TaskState => {
   switch (action.type) {
     case TaskActions.READ_ALL_SUCCESS:
-      return { ...state, taskLists: action.payload };
+      return {
+        ...state,
+        tasks: action.payload.tasks,
+        totalTask: action.payload.totalTask,
+      };
 
     // const newTask = { sortIndex: action.payload };
     // sortIndex += 1;
