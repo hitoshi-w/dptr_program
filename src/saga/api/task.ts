@@ -1,7 +1,6 @@
 import { db } from 'index';
 import { Task } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
-import _ from 'lodash';
 
 export const readAll = async (currentUser: User) => {
   const docRef = db.collection('taskLists').doc('hello worl');
@@ -12,7 +11,6 @@ export const readAll = async (currentUser: User) => {
     const data = doc.data();
     const task = {
       id: data.id,
-      sortIndex: data.sortIndex,
       content: data.content,
       priority: data.priority,
       staff: data.staff,
@@ -20,8 +18,17 @@ export const readAll = async (currentUser: User) => {
     };
     tasks.push(task);
   });
-  console.log(tasks);
-  return { tasks, totalTask: tasks.length };
+  return { tasks, taskId: tasks.length };
+};
+
+export const createTask = async (currentUser: User, params: Task) => {
+  const docRef = db
+    .collection('taskLists')
+    .doc('hello worl')
+    .collection('0');
+  await docRef.doc(`${params.id}`).set(params);
+  const response = await docRef.doc(`${params.id}`).get();
+  return response.data();
 };
 
 // const docRef = db.collection('taskLists').doc('hello worl');

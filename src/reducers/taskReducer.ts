@@ -1,9 +1,7 @@
 import { User } from 'reducers/userReducer';
-import _ from 'lodash';
 
 export interface Task {
   id: number;
-  sortIndex: number;
   statusId: number;
   content: string;
   priority: string;
@@ -12,12 +10,12 @@ export interface Task {
 
 export interface TaskState {
   tasks: Task[];
-  totalTask: number;
+  taskId: number;
 }
 
 const initTasks: TaskState = {
   tasks: [],
-  totalTask: 0,
+  taskId: 0,
 };
 
 //actions
@@ -40,28 +38,22 @@ export const readAll = {
   }),
 };
 
-// const sortIndex = 0;
-// export const createTask = (currentUser: User, params: TaskList) => ({
-//   type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_SUCCESS,
-//   payload: params,
-// });
-// export const createTask = {
-//   request: (currentUser: User, params: TaskList) => ({
-//     type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_REQUEST,
-//     payload: { currentUser, params },
-//   }),
-//   success: (result: Tasks) => ({
-//     type: TaskActions.CREATE_TASK_SUCCESS as typeof TaskActions.CREATE_TASK_SUCCESS,
-//     payload: result,
-//   }),
-// };
+export const createTask = {
+  request: (currentUser: User, params: Task) => ({
+    type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_REQUEST,
+    payload: { currentUser, params },
+  }),
+  success: (result: Task) => ({
+    type: TaskActions.CREATE_TASK_SUCCESS as typeof TaskActions.CREATE_TASK_SUCCESS,
+    payload: result,
+  }),
+};
 
 export type TaskActionTypes =
   | ReturnType<typeof readAll.request>
-  | ReturnType<typeof readAll.success>;
-// | ReturnType<typeof createTask>;
-// | ReturnType<typeof createTask.request>
-// | ReturnType<typeof createTask.success>;
+  | ReturnType<typeof readAll.success>
+  | ReturnType<typeof createTask.request>
+  | ReturnType<typeof createTask.success>;
 
 //reducers
 export const taskReducer = (
@@ -73,40 +65,15 @@ export const taskReducer = (
       return {
         ...state,
         tasks: action.payload.tasks,
-        totalTask: action.payload.totalTask,
+        taskId: action.payload.taskId,
       };
-
-    // const newTask = { sortIndex: action.payload };
-    // sortIndex += 1;
-    // const newState = Object.keys(state.taskLists).map(i => {
-    //   if (action.payload.listId === state.taskLists[parseInt(i)].listId) {
-    //     return {
-    //       state.taskLists[parseInt(i)]
-    //       // tasks: { ...state.taskLists[parseInt(i)].tasks, newTask },
-    //     };
-    //   } else {
-    //     return state.taskLists[parseInt(i)];
-    //   }
-    // });
-
+    case TaskActions.CREATE_TASK_SUCCESS:
+      return {
+        ...state,
+        tasks: [...state.tasks, action.payload],
+        taskId: action.payload.id + 1,
+      };
     default:
       return state;
   }
 };
-
-// const newCard = {
-//   id: `card-${cardID}`,
-//   text: action.payload.text,
-// };
-// cardID += 1;
-// const newState = state.map(ele => {
-//   if(ele.id === action.payload.listID) {
-//     return {
-//       ...ele,
-//       cards: [...ele.cards, newCard]
-//     }
-//   }else{
-//     return ele;
-//   }
-// })
-// return newState;
