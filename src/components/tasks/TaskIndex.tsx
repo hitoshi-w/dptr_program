@@ -1,5 +1,5 @@
 import React from 'react';
-import ModalForm from 'components/layouts/ModalForm';
+import Modal from 'containers/modal';
 import TaskList from 'containers/tasks/taskList';
 
 import styled from 'styled-components';
@@ -7,7 +7,7 @@ import styled from 'styled-components';
 const TaskIndex: React.SFC = () => {
   return (
     <>
-      <ModalForm />
+      <Modal />
       <ListsContainer>
         {['着手', '途中', '完了'].map((status, statusId) => (
           <TaskList key={statusId} status={status} statusId={statusId} />

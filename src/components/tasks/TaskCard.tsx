@@ -13,6 +13,7 @@ interface TackCardProps {
   staff: string;
   currentUser: User;
   deleteTask: (currentUser: User, id: number) => void;
+  openModal: () => void;
 }
 
 const TaskCard: React.SFC<TackCardProps> = ({
@@ -22,6 +23,7 @@ const TaskCard: React.SFC<TackCardProps> = ({
   staff,
   currentUser,
   deleteTask,
+  openModal,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -37,40 +39,46 @@ const TaskCard: React.SFC<TackCardProps> = ({
     deleteTask(currentUser, id);
   };
 
-  const ToggleMenu = () => (
-    <div>
-      <Button
-        aria-controls="simple-menu"
-        aria-haspopup="true"
-        onClick={handleOpenMenu}
-      >
-        <Icon>more_vert</Icon>
-      </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleCloseMenu}
-      >
-        <MenuItem>更新</MenuItem>
-        <MenuItem onClick={handleDeleteTask}>削除</MenuItem>
-      </Menu>
-    </div>
+  const handleOpenModal = () => {
+    openModal();
+  };
+
+  const renderMenu = (
+    <Menu
+      id="simple-menu"
+      anchorEl={anchorEl}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      getContentAnchorEl={null}
+      keepMounted
+      open={Boolean(anchorEl)}
+      onClose={handleCloseMenu}
+    >
+      <MenuItem onClick={handleOpenModal}>更新</MenuItem>
+      <MenuItem onClick={handleDeleteTask}>削除</MenuItem>
+    </Menu>
   );
 
   return (
-    <CardContainer>
-      <Card>
-        <_CardContent>
-          <CardBody>
-            <Typography gutterBottom>{content}</Typography>
-            <Typography gutterBottom>担当者：{staff}</Typography>
-          </CardBody>
-          <ToggleMenu />
-        </_CardContent>
-      </Card>
-    </CardContainer>
+    <div>
+      <CardContainer>
+        <Card>
+          <_CardContent>
+            <CardBody>
+              <Typography gutterBottom>{content}</Typography>
+              <Typography gutterBottom>担当者：{staff}</Typography>
+            </CardBody>
+            <Button
+              aria-controls="simple-menu"
+              aria-haspopup="true"
+              onClick={handleOpenMenu}
+            >
+              <Icon>more_vert</Icon>
+            </Button>
+          </_CardContent>
+        </Card>
+      </CardContainer>
+      {renderMenu}
+    </div>
   );
 };
 

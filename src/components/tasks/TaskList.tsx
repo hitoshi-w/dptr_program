@@ -144,12 +144,12 @@ const ListHead = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 1.2rem;
+  padding: 0 12px;
   h2 {
     letter-spacing: 1.6px;
   }
   span {
-    font-size: 2.4rem;
+    font-size: 24px;
   }
 `;
 
@@ -176,7 +176,7 @@ const _Textarea = styled(Textarea)`
   border: 1px solid var(--color-light-dark-3);
   border-radius: 3px;
   overflow: hidden;
-  padding: 1rem;
+  padding: 10px;
   line-height: 1.5;
 `;
 
@@ -187,7 +187,7 @@ const ListContainer = styled.div`
   height: inherit;
   padding: 8px;
   &:not(:last-child) {
-    margin-right: 1rem;
+    margin-right: 10px;
   }
 `;
 

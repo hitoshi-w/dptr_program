@@ -25,11 +25,11 @@ saga.run(rootSaga);
 const AppContainer = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 120rem;
-  min-width: 96rem;
+  max-width: 1200px;
+  min-width: 960px;
   width: 100%;
   height: 100vh;
-  margin: 0 10rem;
+  margin: 0 100px;
 `;
 
 ReactDOM.render(
