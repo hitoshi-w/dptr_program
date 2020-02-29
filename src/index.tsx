@@ -29,7 +29,7 @@ const AppContainer = styled.div`
   min-width: 960px;
   width: 100%;
   height: 100vh;
-  margin: 0 100px;
+  margin: 0 auto;
 `;
 
 ReactDOM.render(

@@ -1,20 +1,21 @@
 import React from 'react';
-import fb from 'config/fbConfig';
+
 import {
   fade,
   makeStyles,
   Theme,
   createStyles,
 } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import MenuItem from '@material-ui/core/MenuItem';
-import Menu from '@material-ui/core/Menu';
+import {
+  IconButton,
+  Typography,
+  InputBase,
+  MenuItem,
+  Menu,
+} from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
+import styled from 'styled-components';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -57,7 +58,6 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Navbar: React.FC = () => {
-  const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -73,10 +73,10 @@ const Navbar: React.FC = () => {
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+      getContentAnchorEl={null}
       id={menuId}
       keepMounted
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
@@ -85,43 +85,57 @@ const Navbar: React.FC = () => {
   );
 
   return (
-    <div>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" noWrap>
-            Material-UI
-          </Typography>
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              inputProps={{ 'aria-label': 'search' }}
-            />
-          </div>
-          <div>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
-          </div>
-        </Toolbar>
-      </AppBar>
+    <Header>
+      <Typography variant="h5" noWrap>
+        Taska
+      </Typography>
+      <Search>
+        <SearchIconBox>
+          <_SearchIcon />
+        </SearchIconBox>
+        <_InputBase placeholder="Search..."></_InputBase>
+      </Search>
+      <div>
+        <IconButton
+          aria-label="account of current user"
+          aria-controls={menuId}
+          aria-haspopup="true"
+          onClick={handleProfileMenuOpen}
+        >
+          W
+        </IconButton>
+      </div>
       {renderMenu}
-    </div>
+    </Header>
   );
 };
+
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 12px;
+`;
+
+const Search = styled.div`
+  display: flex;
+  border-bottom: 1px solid var(--color-grey-dark-3);
+`;
+
+const SearchIconBox = styled.div`
+  display: flex;
+  align-self: center;
+  margin-right: 4px;
+`;
+
+const _SearchIcon = styled(SearchIcon)`
+  color: var(--color-grey-dark-2);
+`;
+
+const _InputBase = styled(InputBase)`
+  width: 240px;
+`;
+
 // const logout = () => {
 //   fb.auth().signOut();
 // };

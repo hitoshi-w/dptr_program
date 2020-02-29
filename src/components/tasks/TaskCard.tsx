@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
-import { Card, Typography, CardContent, Icon } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import { User } from 'reducers/userReducer';
+import { MoreVert } from '@material-ui/icons';
+import {
+  Card,
+  Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+} from '@material-ui/core';
 import styled from 'styled-components';
 
 interface TackCardProps {
@@ -16,7 +20,7 @@ interface TackCardProps {
   openModal: (id: number) => void;
 }
 
-const TaskCard: React.SFC<TackCardProps> = ({
+const TaskCard: React.FC<TackCardProps> = ({
   id,
   content,
   priority,
@@ -53,45 +57,63 @@ const TaskCard: React.SFC<TackCardProps> = ({
       open={Boolean(anchorEl)}
       onClose={handleCloseMenu}
     >
-      <MenuItem onClick={handleOpenModal}>更新</MenuItem>
-      <MenuItem onClick={handleDeleteTask}>削除</MenuItem>
+      <_MenuItem onClick={handleOpenModal}>更新</_MenuItem>
+      <_MenuItem onClick={handleDeleteTask}>削除</_MenuItem>
     </Menu>
   );
 
   return (
-    <div>
-      <CardContainer>
-        <Card>
-          <_CardContent>
-            <CardBody>
-              <Typography gutterBottom>{content}</Typography>
-              <Typography gutterBottom>担当者：{staff}</Typography>
-            </CardBody>
-            <Button
-              aria-controls="simple-menu"
-              aria-haspopup="true"
-              onClick={handleOpenMenu}
-            >
-              <Icon>more_vert</Icon>
-            </Button>
-          </_CardContent>
-        </Card>
-      </CardContainer>
+    <>
+      <_Card>
+        <CardBody>
+          <Typography>{content}</Typography>
+          <_Typography>担当者：{staff}</_Typography>
+        </CardBody>
+        <CardIcon>
+          <IconButton
+            aria-controls="simple-menu"
+            aria-haspopup="true"
+            onClick={handleOpenMenu}
+            component="span"
+          >
+            <MoreVert fontSize="small" />
+          </IconButton>
+        </CardIcon>
+      </_Card>
       {renderMenu}
-    </div>
+    </>
   );
 };
 
-const CardContainer = styled.div`
-  margin-bottom: 8px;
+const _MenuItem = styled(MenuItem)`
+  padding-left: 20px;
+  padding-right: 20px;
 `;
 
-const _CardContent = styled(CardContent)`
+const _Card = styled(Card)`
   display: flex;
+  margin-bottom: 8px;
+  padding: 12px 4px 12px 12px;
 `;
 
 const CardBody = styled.div`
-  flex: 1;
+  flex: 1 0 300px;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  box-sizing: border-box;
+`;
+
+const _Typography = styled(Typography)`
+  margin-top: 8px;
+  color: var(--color-grey-dark-2);
+  font-size: 12px;
+`;
+
+const CardIcon = styled.div`
+  flex: 0 0 44px;
+  align-self: flex-start;
+  margin-left: 4px;
 `;
 
 export default TaskCard;

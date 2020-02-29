@@ -4,7 +4,6 @@ import { Dispatch } from 'redux';
 import Modal from 'components/layouts/Modal';
 import { RootState } from 'reducers/rootReducer';
 import { closeModal } from 'reducers/modalReducer';
-import { Task } from 'reducers/taskReducer';
 
 const mapStateToProps = (state: RootState) => ({
   isOpen: state.modalReducer.modal.isOpen,

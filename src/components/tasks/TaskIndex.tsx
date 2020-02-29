@@ -22,6 +22,7 @@ const ListsContainer = styled.div`
   flex-direction: row;
   flex-grow: 1;
   flex-shrink: 0;
+  margin: 10px 0;
 `;
 
 export default TaskIndex;

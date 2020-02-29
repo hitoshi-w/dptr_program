@@ -58,7 +58,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
   const FormComponent = () => {
     return (
       <>
-        <form onSubmit={onSubmit}>
+        <Form onSubmit={onSubmit}>
           <_Card>
             <_Textarea
               autoFocus
@@ -67,41 +67,43 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
               inputRef={register}
               name="content"
             />
-            <TextField inputRef={register} label="担当者" name="staff" />
-            <FormControl component="fieldset">
-              <FormLabel component="legend">優先度</FormLabel>
-              <RadioGroup
-                aria-label="priority"
-                name="priority-radio"
-                defaultValue="lowPriority"
-                row
-              >
-                <FormControlLabel
-                  value="highPriority"
-                  control={
-                    <Radio
-                      color="primary"
-                      inputRef={register}
-                      name="priority"
-                    />
-                  }
-                  label="高"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  value="lowPriority"
-                  control={
-                    <Radio
-                      color="primary"
-                      inputRef={register}
-                      name="priority"
-                    />
-                  }
-                  label="低"
-                  labelPlacement="start"
-                />
-              </RadioGroup>
-            </FormControl>
+            <FormBody>
+              <TextField inputRef={register} label="担当者" name="staff" />
+              <FormControl component="fieldset">
+                <FormLabel component="legend">優先度</FormLabel>
+                <RadioGroup
+                  aria-label="priority"
+                  name="priority-radio"
+                  defaultValue="lowPriority"
+                  row
+                >
+                  <FormControlLabel
+                    value="highPriority"
+                    control={
+                      <Radio
+                        color="primary"
+                        inputRef={register}
+                        name="priority"
+                      />
+                    }
+                    label="高"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel
+                    value="lowPriority"
+                    control={
+                      <Radio
+                        color="primary"
+                        inputRef={register}
+                        name="priority"
+                      />
+                    }
+                    label="低"
+                    labelPlacement="start"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </FormBody>
           </_Card>
 
           <FormButton>
@@ -112,7 +114,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
               キャンセル
             </_Button>
           </FormButton>
-        </form>
+        </Form>
       </>
     );
   };
@@ -134,6 +136,29 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
     </>
   );
 };
+
+const Form = styled.form`
+  margin-bottom: 8px;
+`;
+
+const FormBody = styled.div`
+  display: flex;
+  justify-content: space-around;
+  margin-top: 8px;
+`;
+
+const ListContainer = styled.div`
+  flex: 1;
+  background-color: #dfe3e6;
+  border-radius: 3px;
+  border: 1px solid var(--color-light-dark-3);
+  padding: 8px;
+  overflow: scroll;
+  min-height: 400px;
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+`;
 
 const ListHead = styled.div`
   display: flex;
@@ -161,7 +186,7 @@ const _Button = styled(Button)`
 `;
 
 const _Card = styled(Card)`
-  min-height: 8rem;
+  min-height: 80px;
   padding: 6px 8px 2px;
 `;
 
@@ -170,20 +195,8 @@ const _Textarea = styled(Textarea)`
   width: 100%;
   border: 1px solid var(--color-light-dark-3);
   border-radius: 3px;
-  overflow: hidden;
   padding: 10px;
   line-height: 1.5;
-`;
-
-const ListContainer = styled.div`
-  flex: 1;
-  background-color: #dfe3e6;
-  border-radius: 3px;
-  height: inherit;
-  padding: 8px;
-  &:not(:last-child) {
-    margin-right: 10px;
-  }
 `;
 
 export default TaskIndex;

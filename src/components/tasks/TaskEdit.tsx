@@ -27,7 +27,7 @@ interface TaskEditProps {
   putTask: (currentUser: User, params: Task) => void;
 }
 
-const TaskEdit: React.FC<TaskEditProps> = ({ task, currentUser, putTask }) => {
+const TaskEdit: React.SFC<TaskEditProps> = ({ task, currentUser, putTask }) => {
   const { register, handleSubmit } = useForm<TaskForm>();
   const initialValues = {
     content: task.content,
@@ -48,7 +48,7 @@ const TaskEdit: React.FC<TaskEditProps> = ({ task, currentUser, putTask }) => {
   return (
     <Form onSubmit={onSubmit}>
       <h2>タスク編集</h2>
-      <Textarea
+      <_Textarea
         autoFocus
         minRows={4}
         inputRef={register}
@@ -98,13 +98,25 @@ const Form = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  width: 40rem;
-  height: 45rem;
-  padding: 2rem;
+  width: 360px;
+  height: 450px;
+  padding: 20px;
+  & > * {
+    margin-bottom: 12px;
+  }
   h2 {
     align-self: center;
-    margin: 0;
   }
+`;
+
+const _Textarea = styled(Textarea)`
+  resize: none;
+  width: 100%;
+  border: 1px solid var(--color-light-dark-3);
+  border-radius: 3px;
+  padding: 10px;
+  line-height: 1.5;
+  font-size: 16px;
 `;
 
 export default TaskEdit;

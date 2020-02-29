@@ -3,7 +3,7 @@ import { Dispatch } from 'redux';
 
 import TaskCard from 'components/tasks/TaskCard';
 import { User } from 'reducers/userReducer';
-import { Task, deleteTask } from 'reducers/taskReducer';
+import { deleteTask } from 'reducers/taskReducer';
 import { openModal } from 'reducers/modalReducer';
 import { RootState } from 'reducers/rootReducer';
 
