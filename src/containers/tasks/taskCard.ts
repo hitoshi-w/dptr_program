@@ -16,7 +16,7 @@ const mapStateToProps = (state: RootState) => ({
 const mapDispatchToProps = (dispatch: Dispatch) => ({
   deleteTask: (currentUser: User, id: number) =>
     dispatch(deleteTask.request(currentUser, id)),
-  openModal: () => dispatch(openModal()),
+  openModal: (id: number) => dispatch(openModal(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskCard);

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import Modal from '@material-ui/core/Modal';
 import TaskEdit from 'containers/tasks/taskEdit';
+import { Task } from 'reducers/taskReducer';
+
 import styled from 'styled-components';
 
 interface ModalProps {

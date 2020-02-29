@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Textarea from 'react-textarea-autosize';
+import { TaskForm } from 'components/tasks/TaskEdit';
 import TaskCard from 'containers/tasks/taskCard';
 import { Task } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
@@ -17,12 +18,6 @@ import {
   Card,
 } from '@material-ui/core';
 import styled from 'styled-components';
-
-interface TaskForm {
-  content: string;
-  priority: string;
-  staff: string;
-}
 
 interface TaskIndexProps {
   status: string;

@@ -13,7 +13,7 @@ interface TackCardProps {
   staff: string;
   currentUser: User;
   deleteTask: (currentUser: User, id: number) => void;
-  openModal: () => void;
+  openModal: (id: number) => void;
 }
 
 const TaskCard: React.SFC<TackCardProps> = ({
@@ -40,7 +40,7 @@ const TaskCard: React.SFC<TackCardProps> = ({
   };
 
   const handleOpenModal = () => {
-    openModal();
+    openModal(id);
   };
 
   const renderMenu = (
@@ -94,5 +94,4 @@ const CardBody = styled.div`
   flex: 1;
 `;
 
-const _Menu = styled(Menu)``;
 export default TaskCard;

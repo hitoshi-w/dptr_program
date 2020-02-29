@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import Textarea from 'react-textarea-autosize';
 
 import {
   TextField,
@@ -12,29 +13,51 @@ import {
 } from '@material-ui/core';
 import styled from 'styled-components';
 
-export type TaskForm = {
-  title: string;
+export interface TaskForm {
+  content: string;
   staff: string;
   priority: string;
-};
+}
 
-const TaskNew: React.FC = () => {
+interface TaskEditProps {
+  content?: string;
+  staff?: string;
+  priority?: string;
+}
+
+const TaskEdit: React.FC<TaskEditProps> = ({ content, staff, priority }) => {
   const { register, handleSubmit } = useForm<TaskForm>();
-  const onSubmit = handleSubmit(({ title, staff, priority }) => {
+  const initialValues = {
+    staff,
+    content,
+    priority,
+  };
+  const onSubmit = handleSubmit(({ content, staff, priority }) => {
     // createTask({ title, staff, priority });
   });
 
   return (
     <Form onSubmit={onSubmit}>
-      <h2>タスク作成</h2>
-      <TextField inputRef={register} label="タスク" name="title" />
-      <TextField inputRef={register} label="担当者" name="staff" />
+      <h2>タスク編集</h2>
+      <Textarea
+        autoFocus
+        minRows={4}
+        inputRef={register}
+        name="content"
+        defaultValue={initialValues.content}
+      />
+      <TextField
+        inputRef={register}
+        label="担当者"
+        name="staff"
+        defaultValue={initialValues.staff}
+      />
       <FormControl component="fieldset">
         <FormLabel component="legend">優先度</FormLabel>
         <RadioGroup
           aria-label="priority"
           name="priority-radio"
-          defaultValue="lowPriority"
+          defaultValue={initialValues.priority}
           row
         >
           <FormControlLabel
@@ -56,7 +79,7 @@ const TaskNew: React.FC = () => {
         </RadioGroup>
       </FormControl>
       <Button variant="contained" color="primary" type="submit">
-        作成
+        更新
       </Button>
     </Form>
   );
@@ -75,4 +98,4 @@ const Form = styled.form`
   }
 `;
 
-export default TaskNew;
+export default TaskEdit;

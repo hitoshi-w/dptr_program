@@ -1,5 +1,6 @@
 interface Modal {
   isOpen: boolean;
+  taskId: number | null;
 }
 
 interface ModalState {
@@ -7,7 +8,7 @@ interface ModalState {
 }
 
 const initModal: ModalState = {
-  modal: { isOpen: false },
+  modal: { isOpen: false, taskId: null },
 };
 
 //actions
@@ -17,8 +18,9 @@ export const ModalActions = {
 } as const;
 
 //action creators
-export const openModal = () => ({
+export const openModal = (id: number) => ({
   type: ModalActions.OPEN_MODAL as typeof ModalActions.OPEN_MODAL,
+  payload: id,
 });
 
 export const closeModal = () => ({
@@ -37,9 +39,9 @@ export const modalReducer = (
 ): ModalState => {
   switch (action.type) {
     case ModalActions.OPEN_MODAL:
-      return { modal: { isOpen: true } };
+      return { modal: { isOpen: true, taskId: action.payload } };
     case ModalActions.CLOSE_MODAL:
-      return { modal: { isOpen: false } };
+      return { modal: { isOpen: false, taskId: null } };
     default:
       return state;
   }
