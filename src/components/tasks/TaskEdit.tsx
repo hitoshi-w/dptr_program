@@ -1,6 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import Textarea from 'react-textarea-autosize';
+import { User } from 'reducers/userReducer';
+import { Task } from 'reducers/taskReducer';
 
 import {
   TextField,
@@ -20,20 +22,27 @@ export interface TaskForm {
 }
 
 interface TaskEditProps {
-  content?: string;
-  staff?: string;
-  priority?: string;
+  task: Task;
+  currentUser: User;
+  putTask: (currentUser: User, params: Task) => void;
 }
 
-const TaskEdit: React.FC<TaskEditProps> = ({ content, staff, priority }) => {
+const TaskEdit: React.FC<TaskEditProps> = ({ task, currentUser, putTask }) => {
   const { register, handleSubmit } = useForm<TaskForm>();
   const initialValues = {
-    staff,
-    content,
-    priority,
+    content: task.content,
+    staff: task.staff,
+    priority: task.priority,
   };
   const onSubmit = handleSubmit(({ content, staff, priority }) => {
-    // createTask({ title, staff, priority });
+    const params = {
+      id: task.id,
+      statusId: task.statusId,
+      content,
+      staff,
+      priority,
+    };
+    putTask(currentUser, params);
   });
 
   return (

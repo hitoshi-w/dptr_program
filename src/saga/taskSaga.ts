@@ -6,6 +6,7 @@ import {
   readAll,
   createTask,
   deleteTask,
+  putTask,
 } from 'reducers/taskReducer';
 import * as api from 'saga/api/task';
 
@@ -27,10 +28,17 @@ function* runDeleteTask(action: ReturnType<typeof deleteTask.request>) {
   yield put(deleteTask.success(data));
 }
 
+function* runPutTask(action: ReturnType<typeof putTask.request>) {
+  const { params, currentUser } = action.payload;
+  const data: Task = yield call(api.putTask, currentUser, params);
+  yield put(putTask.success(data));
+}
+
 function* watchProject() {
   yield takeLatest(TaskActions.READ_ALL_REQUEST, runReadAll);
   yield takeLatest(TaskActions.CREATE_TASK_REQUEST, runCreateTask);
   yield takeLatest(TaskActions.DELETE_TASK_REQUEST, runDeleteTask);
+  yield takeLatest(TaskActions.PUT_TASK_REQUEST, runPutTask);
 }
 
 export default watchProject;

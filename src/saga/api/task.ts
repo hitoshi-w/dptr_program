@@ -40,6 +40,20 @@ export const deleteTask = async (currentUser: User, id: number) => {
   return id;
 };
 
+export const putTask = async (currentUser: User, params: Task) => {
+  const docRef = db
+    .collection('taskLists')
+    .doc('hello worl')
+    .collection('0');
+  await docRef.doc(`${params.id}`).update({
+    content: params.content,
+    priority: params.priority,
+    staff: params.staff,
+  });
+  const response = await docRef.doc(`${params.id}`).get();
+  return response.data();
+};
+
 // const docRef = db.collection('taskLists').doc('hello worl');
 // const response = await docRef.get();
 

@@ -1,4 +1,5 @@
 import { User } from 'reducers/userReducer';
+import _ from 'lodash';
 
 export interface Task {
   id: number;
@@ -26,6 +27,8 @@ export const TaskActions = {
   CREATE_TASK_SUCCESS: 'CREATE_TASK_SUCCESS',
   DELETE_TASK_REQUEST: 'DELETE_TASK_REQUEST',
   DELETE_TASK_SUCCESS: 'DELETE_TASK_SUCCESS',
+  PUT_TASK_REQUEST: 'PUT_TASK_REQUEST',
+  PUT_TASK_SUCCESS: 'PUT_TASK_SUCCESS',
 } as const;
 
 //action creators
@@ -62,13 +65,26 @@ export const deleteTask = {
   }),
 };
 
+export const putTask = {
+  request: (currentUser: User, params: Task) => ({
+    type: TaskActions.PUT_TASK_REQUEST as typeof TaskActions.PUT_TASK_REQUEST,
+    payload: { currentUser, params },
+  }),
+  success: (result: Task) => ({
+    type: TaskActions.PUT_TASK_SUCCESS as typeof TaskActions.PUT_TASK_SUCCESS,
+    payload: result,
+  }),
+};
+
 export type TaskActionTypes =
   | ReturnType<typeof readAll.request>
   | ReturnType<typeof readAll.success>
   | ReturnType<typeof createTask.request>
   | ReturnType<typeof createTask.success>
   | ReturnType<typeof deleteTask.request>
-  | ReturnType<typeof deleteTask.success>;
+  | ReturnType<typeof deleteTask.success>
+  | ReturnType<typeof putTask.request>
+  | ReturnType<typeof putTask.success>;
 
 //reducers
 export const taskReducer = (
@@ -93,6 +109,12 @@ export const taskReducer = (
         tasks: state.tasks.filter(task => task.id !== action.payload),
         taskId: state.taskId,
       };
+    case TaskActions.PUT_TASK_SUCCESS:
+      const mapped = _.mapKeys(state.tasks, 'id')[action.payload.id];
+      mapped.content = action.payload.content;
+      mapped.priority = action.payload.priority;
+      mapped.staff = action.payload.staff;
+      return { ...state, tasks: [...state.tasks], taskId: state.taskId };
     default:
       return state;
   }
