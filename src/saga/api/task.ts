@@ -5,7 +5,9 @@ import { User } from 'reducers/userReducer';
 export const readAll = async (currentUser: User) => {
   const docRef = db.collection('taskLists').doc('hello worl');
   const response = await docRef.collection('0').get();
-  const tasks: Task[] = [];
+  const newTask: Task[] = [];
+  const wip: Task[] = [];
+  const done: Task[] = [];
 
   response.forEach(doc => {
     const data = doc.data();
@@ -16,9 +18,37 @@ export const readAll = async (currentUser: User) => {
       staff: data.staff,
       statusId: data.statusId,
     };
-    tasks.push(task);
+    if (task.statusId === 0) {
+      newTask.push(task);
+    }
+    if (task.statusId === 1) {
+      wip.push(task);
+    }
+    if (task.statusId === 2) {
+      done.push(task);
+    }
   });
-  return { tasks, taskId: tasks.length };
+
+  return {
+    taskLists: [
+      {
+        status: '着手',
+        id: 0,
+        tasks: newTask,
+      },
+      {
+        status: '途中',
+        id: 1,
+        tasks: wip,
+      },
+      {
+        status: '完了',
+        id: 2,
+        tasks: done,
+      },
+    ],
+    taskId: newTask.length + wip.length + done.length,
+  };
 };
 
 export const createTask = async (currentUser: User, params: Task) => {

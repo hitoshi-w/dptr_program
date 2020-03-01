@@ -1,11 +1,16 @@
 import { connect } from 'react-redux';
-
+import { Dispatch } from 'redux';
 import TaskIndex from 'components/tasks/TaskIndex';
 import { RootState } from 'reducers/rootReducer';
+import { dragTask, DragIds } from 'reducers/taskReducer';
 
 const mapStateToProps = (state: RootState) => ({
-  tasks: state.taskReducer.tasks,
+  taskLists: state.taskReducer.taskLists,
   currentUser: state.userReducer.user,
 });
 
-export default connect(mapStateToProps)(TaskIndex);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  dragTask: (dragIds: DragIds) => dispatch(dragTask(dragIds)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(TaskIndex);

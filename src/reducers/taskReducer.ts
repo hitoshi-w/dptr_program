@@ -19,6 +19,46 @@ const initTasks: TaskState = {
   taskId: 0,
 };
 
+export interface TaskList {
+  id: number;
+  status: string;
+  tasks: Task[];
+}
+
+export interface TaskListState {
+  taskLists: TaskList[];
+  taskId: number;
+}
+
+export const initTaskList: TaskListState = {
+  taskLists: [
+    {
+      status: '着手',
+      id: 0,
+      tasks: [],
+    },
+    {
+      status: '途中',
+      id: 1,
+      tasks: [],
+    },
+    {
+      status: '完了',
+      id: 2,
+      tasks: [],
+    },
+  ],
+  taskId: 0,
+};
+
+export interface DragIds {
+  droppableIdStart: string;
+  droppableIdEnd: string;
+  droppableIndexStart: number;
+  droppableIndexEnd: number;
+  draggableId: string;
+}
+
 //actions
 export const TaskActions = {
   READ_ALL_REQUEST: 'READ_ALL_REQUEST',
@@ -29,6 +69,7 @@ export const TaskActions = {
   DELETE_TASK_SUCCESS: 'DELETE_TASK_SUCCESS',
   PUT_TASK_REQUEST: 'PUT_TASK_REQUEST',
   PUT_TASK_SUCCESS: 'PUT_TASK_SUCCESS',
+  DRAG_TASK: 'DRAG_TASK',
 } as const;
 
 //action creators
@@ -37,7 +78,7 @@ export const readAll = {
     type: TaskActions.READ_ALL_REQUEST as typeof TaskActions.READ_ALL_REQUEST,
     payload: currentUser,
   }),
-  success: (result: TaskState) => ({
+  success: (result: TaskListState) => ({
     type: TaskActions.READ_ALL_SUCCESS as typeof TaskActions.READ_ALL_SUCCESS,
     payload: result,
   }),
@@ -76,6 +117,11 @@ export const putTask = {
   }),
 };
 
+export const dragTask = (dragIds: DragIds) => ({
+  type: TaskActions.DRAG_TASK as typeof TaskActions.DRAG_TASK,
+  payload: dragIds,
+});
+
 export type TaskActionTypes =
   | ReturnType<typeof readAll.request>
   | ReturnType<typeof readAll.success>
@@ -84,37 +130,71 @@ export type TaskActionTypes =
   | ReturnType<typeof deleteTask.request>
   | ReturnType<typeof deleteTask.success>
   | ReturnType<typeof putTask.request>
-  | ReturnType<typeof putTask.success>;
+  | ReturnType<typeof putTask.success>
+  | ReturnType<typeof dragTask>;
 
 //reducers
 export const taskReducer = (
-  state = initTasks,
+  state = initTaskList,
   action: TaskActionTypes,
-): TaskState => {
+): TaskListState => {
   switch (action.type) {
     case TaskActions.READ_ALL_SUCCESS:
       return {
         ...state,
-        tasks: action.payload.tasks,
+        taskLists: action.payload.taskLists,
         taskId: action.payload.taskId,
       };
-    case TaskActions.CREATE_TASK_SUCCESS:
-      return {
-        ...state,
-        tasks: [...state.tasks, action.payload],
-        taskId: action.payload.id + 1,
-      };
-    case TaskActions.DELETE_TASK_SUCCESS:
-      return {
-        tasks: state.tasks.filter(task => task.id !== action.payload),
-        taskId: state.taskId,
-      };
-    case TaskActions.PUT_TASK_SUCCESS:
-      const mapped = _.mapKeys(state.tasks, 'id')[action.payload.id];
-      mapped.content = action.payload.content;
-      mapped.priority = action.payload.priority;
-      mapped.staff = action.payload.staff;
-      return { ...state, tasks: [...state.tasks], taskId: state.taskId };
+    // case TaskActions.CREATE_TASK_SUCCESS:
+    //   return {
+    //     ...state,
+    //     tasks: [...state.tasks, action.payload],
+    //     taskId: action.payload.id + 1,
+    //   };
+    // case TaskActions.DELETE_TASK_SUCCESS:
+    //   return {
+    //     tasks: state.tasks.filter(task => task.id !== action.payload),
+    //     taskId: state.taskId,
+    //   };
+    // case TaskActions.PUT_TASK_SUCCESS:
+    //   const mapped = _.mapKeys(state.tasks, 'id')[action.payload.id];
+    //   mapped.content = action.payload.content;
+    //   mapped.priority = action.payload.priority;
+    //   mapped.staff = action.payload.staff;
+    //   return { ...state, tasks: [...state.tasks], taskId: state.taskId };
+    // case TaskActions.DRAG_TASK:
+    //   const {
+    //     droppableIdStart,
+    //     droppableIdEnd,
+    //     droppableIndexEnd,
+    //     droppableIndexStart,
+    //   } = action.payload;
+
+    //   if (droppableIdStart === droppableIdEnd) {
+    //     //same list
+    //     const tasks = state.tasks.filter(
+    //       task => task.statusId === parseInt(droppableIdStart),
+    //     );
+    //     const [removed] = tasks.splice(droppableIndexStart, 1);
+    //     tasks.splice(droppableIndexEnd, 0, removed);
+    //     console.log(state);
+    //     return {
+    //       ...state,
+    //       tasks: state.tasks,
+    //       taskId: state.taskId,
+    //     };
+    //   } else {
+    //     //other list
+    //     const listStart = state.tasks.filter(
+    //       task => task.statusId === parseInt(droppableIdStart),
+    //     );
+    //     const [removed] = listStart.splice(droppableIndexStart, 1);
+    //     const tasks = state.tasks.filter(
+    //       task => parseInt(droppableIdEnd) === task.statusId,
+    //     );
+    //     tasks.splice(droppableIndexEnd, 0, removed);
+    //     return { tasks, taskId: state.taskId };
+    //   }
     default:
       return state;
   }

@@ -1,7 +1,7 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import {
   Task,
-  TaskState,
+  TaskListState,
   TaskActions,
   readAll,
   createTask,
@@ -12,7 +12,7 @@ import * as api from 'saga/api/task';
 
 function* runReadAll(action: ReturnType<typeof readAll.request>) {
   const currentUser = action.payload;
-  const data: TaskState = yield call(api.readAll, currentUser);
+  const data: TaskListState = yield call(api.readAll, currentUser);
   yield put(readAll.success(data));
 }
 

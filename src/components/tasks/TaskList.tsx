@@ -3,8 +3,9 @@ import { useForm } from 'react-hook-form';
 import Textarea from 'react-textarea-autosize';
 import { TaskForm } from 'components/tasks/TaskEdit';
 import TaskCard from 'containers/tasks/taskCard';
-import { Task } from 'reducers/taskReducer';
+import { TaskList, Task } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
+import { Droppable } from 'react-beautiful-dnd';
 
 import {
   TextField,
@@ -20,18 +21,16 @@ import {
 import styled from 'styled-components';
 
 interface TaskIndexProps {
-  status: string;
+  taskList: TaskList;
   statusId: number;
-  tasks: Task[];
   taskId: number;
   currentUser: User;
   createTask: (currentUser: User, params: Task) => void;
 }
 
 const TaskIndex: React.FC<TaskIndexProps> = ({
-  status,
+  taskList,
   statusId,
-  tasks,
   taskId,
   currentUser,
   createTask,
@@ -119,21 +118,22 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
     );
   };
   return (
-    <>
-      <ListContainer>
-        <ListHead>
-          <h2>{status}</h2>
-          <Icon onClick={handleOpen}>add</Icon>
-        </ListHead>
-        {form ? <FormComponent /> : <></>}
+    <Droppable droppableId={statusId.toString()}>
+      {provided => (
+        <ListContainer {...provided.droppableProps} ref={provided.innerRef}>
+          <ListHead>
+            <h2>{taskList.status}</h2>
+            <Icon onClick={handleOpen}>add</Icon>
+          </ListHead>
+          {form ? <FormComponent /> : <></>}
 
-        {tasks.map((task, index) => {
-          if (task.statusId === statusId) {
-            return <TaskCard key={index} {...task} />;
-          }
-        })}
-      </ListContainer>
-    </>
+          {taskList.tasks.map((task, index) => (
+            <TaskCard key={index} index={index} {...task} />
+          ))}
+          {provided.placeholder}
+        </ListContainer>
+      )}
+    </Droppable>
   );
 };
 

@@ -1,18 +1,43 @@
 import React from 'react';
 import Modal from 'containers/modal';
-import TaskList from 'containers/tasks/taskList';
+import _TaskList from 'containers/tasks/taskList';
+import { TaskList } from 'reducers/taskReducer';
+import { DragIds } from 'reducers/taskReducer';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 import styled from 'styled-components';
 
-const TaskIndex: React.SFC = () => {
+interface TaskIndex {
+  taskLists: TaskList[];
+  dragTask: (dragIds: DragIds) => void;
+}
+
+const TaskIndex: React.FC<TaskIndex> = ({ dragTask, taskLists }) => {
+  const onDragEnd = (result: DropResult) => {
+    const { destination, source, draggableId } = result;
+    if (!destination) {
+      return;
+    }
+    const dragIds = {
+      droppableIdStart: source.droppableId,
+      droppableIdEnd: destination.droppableId,
+      droppableIndexStart: source.index,
+      droppableIndexEnd: destination.index,
+      draggableId: draggableId,
+    };
+    dragTask({ ...dragIds });
+  };
+
   return (
     <>
       <Modal />
-      <ListsContainer>
-        {['着手', '途中', '完了'].map((status, statusId) => (
-          <TaskList key={statusId} status={status} statusId={statusId} />
-        ))}
-      </ListsContainer>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <ListsContainer>
+          {taskLists.map((taskList, statusId) => (
+            <_TaskList key={statusId} taskList={taskList} statusId={statusId} />
+          ))}
+        </ListsContainer>
+      </DragDropContext>
     </>
   );
 };

@@ -13,9 +13,14 @@ function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
 }
 
 const mapStateToProps = (state: RootState) => {
-  const task = state.taskReducer.tasks.find(
-    task => task.id === state.modalReducer.modal.taskId,
-  );
+  const tasks: Task[] = [];
+  state.taskReducer.taskLists.forEach(taskList => {
+    taskList.tasks.forEach(task => {
+      tasks.push(task);
+    });
+  });
+
+  const task = tasks.find(task => task.id === state.modalReducer.modal.taskId);
   assertIsDefined(task);
   return {
     currentUser: state.userReducer.user,

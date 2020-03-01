@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { User } from 'reducers/userReducer';
+import { Draggable } from 'react-beautiful-dnd';
 import { MoreVert } from '@material-ui/icons';
 import {
   Card,
@@ -12,6 +13,7 @@ import styled from 'styled-components';
 
 interface TackCardProps {
   id: number;
+  index: number;
   content: string;
   priority: string;
   staff: string;
@@ -22,6 +24,7 @@ interface TackCardProps {
 
 const TaskCard: React.FC<TackCardProps> = ({
   id,
+  index,
   content,
   priority,
   staff,
@@ -63,25 +66,33 @@ const TaskCard: React.FC<TackCardProps> = ({
   );
 
   return (
-    <>
-      <_Card>
-        <CardBody>
-          <Typography>{content}</Typography>
-          <_Typography>担当者：{staff}</_Typography>
-        </CardBody>
-        <CardIcon>
-          <IconButton
-            aria-controls="simple-menu"
-            aria-haspopup="true"
-            onClick={handleOpenMenu}
-            component="span"
-          >
-            <MoreVert fontSize="small" />
-          </IconButton>
-        </CardIcon>
-      </_Card>
-      {renderMenu}
-    </>
+    <Draggable draggableId={id.toString()} index={index}>
+      {provided => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+        >
+          <_Card>
+            <CardBody>
+              <Typography>{content}</Typography>
+              <_Typography>担当者：{staff}</_Typography>
+            </CardBody>
+            <CardIcon>
+              <IconButton
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                onClick={handleOpenMenu}
+                component="span"
+              >
+                <MoreVert fontSize="small" />
+              </IconButton>
+            </CardIcon>
+          </_Card>
+          {renderMenu}
+        </div>
+      )}
+    </Draggable>
   );
 };
 
