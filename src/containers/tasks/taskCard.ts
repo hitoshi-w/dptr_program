@@ -12,8 +12,13 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  deleteTask: (currentUser: User, id: number) =>
-    dispatch(deleteTask.request(currentUser, id)),
+  deleteTask: (
+    currentUser: User,
+    params: {
+      id: number;
+      statusId: number;
+    },
+  ) => dispatch(deleteTask.request(currentUser, params)),
   openModal: (id: number) => dispatch(openModal(id)),
 });
 

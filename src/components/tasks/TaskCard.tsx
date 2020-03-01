@@ -14,11 +14,18 @@ import styled from 'styled-components';
 interface TackCardProps {
   id: number;
   index: number;
+  statusId: number;
   content: string;
   priority: string;
   staff: string;
   currentUser: User;
-  deleteTask: (currentUser: User, id: number) => void;
+  deleteTask: (
+    currentUser: User,
+    params: {
+      id: number;
+      statusId: number;
+    },
+  ) => void;
   openModal: (id: number) => void;
 }
 
@@ -26,6 +33,7 @@ const TaskCard: React.FC<TackCardProps> = ({
   id,
   index,
   content,
+  statusId,
   priority,
   staff,
   currentUser,
@@ -43,7 +51,8 @@ const TaskCard: React.FC<TackCardProps> = ({
   };
 
   const handleDeleteTask = () => {
-    deleteTask(currentUser, id);
+    const params = { id, statusId };
+    deleteTask(currentUser, params);
   };
 
   const handleOpenModal = () => {

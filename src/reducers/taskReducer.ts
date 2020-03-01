@@ -96,11 +96,17 @@ export const createTask = {
 };
 
 export const deleteTask = {
-  request: (currentUser: User, id: number) => ({
+  request: (
+    currentUser: User,
+    params: {
+      id: number;
+      statusId: number;
+    },
+  ) => ({
     type: TaskActions.DELETE_TASK_REQUEST as typeof TaskActions.DELETE_TASK_REQUEST,
-    payload: { currentUser, id },
+    payload: { currentUser, params },
   }),
-  success: (result: number) => ({
+  success: (result: { id: number; statusId: number }) => ({
     type: TaskActions.DELETE_TASK_SUCCESS as typeof TaskActions.DELETE_TASK_SUCCESS,
     payload: result,
   }),
@@ -145,23 +151,54 @@ export const taskReducer = (
         taskLists: action.payload.taskLists,
         taskId: action.payload.taskId,
       };
-    // case TaskActions.CREATE_TASK_SUCCESS:
-    //   return {
-    //     ...state,
-    //     tasks: [...state.tasks, action.payload],
-    //     taskId: action.payload.id + 1,
-    //   };
-    // case TaskActions.DELETE_TASK_SUCCESS:
-    //   return {
-    //     tasks: state.tasks.filter(task => task.id !== action.payload),
-    //     taskId: state.taskId,
-    //   };
-    // case TaskActions.PUT_TASK_SUCCESS:
-    //   const mapped = _.mapKeys(state.tasks, 'id')[action.payload.id];
-    //   mapped.content = action.payload.content;
-    //   mapped.priority = action.payload.priority;
-    //   mapped.staff = action.payload.staff;
-    //   return { ...state, tasks: [...state.tasks], taskId: state.taskId };
+    case TaskActions.CREATE_TASK_SUCCESS:
+      return {
+        taskLists: state.taskLists.map(taskList => {
+          if (taskList.id === action.payload.statusId) {
+            return {
+              ...taskList,
+              tasks: [...taskList.tasks, action.payload],
+            };
+          } else {
+            return taskList;
+          }
+        }),
+        taskId: action.payload.id + 1,
+      };
+    case TaskActions.DELETE_TASK_SUCCESS:
+      return {
+        taskLists: state.taskLists.map(taskList => {
+          if (taskList.id === action.payload.statusId) {
+            return {
+              ...taskList,
+              tasks: taskList.tasks.filter(
+                task => task.id !== action.payload.id,
+              ),
+            };
+          } else {
+            return taskList;
+          }
+        }),
+        taskId: state.taskId,
+      };
+    case TaskActions.PUT_TASK_SUCCESS:
+      return {
+        taskLists: state.taskLists.map(taskList => {
+          if (taskList.id === action.payload.statusId) {
+            const target = _.mapKeys(taskList.tasks, 'id')[action.payload.id];
+            target.content = action.payload.content;
+            target.priority = action.payload.priority;
+            target.staff = action.payload.staff;
+            return {
+              ...taskList,
+              tasks: [...taskList.tasks],
+            };
+          } else {
+            return taskList;
+          }
+        }),
+        taskId: state.taskId,
+      };
     // case TaskActions.DRAG_TASK:
     //   const {
     //     droppableIdStart,
