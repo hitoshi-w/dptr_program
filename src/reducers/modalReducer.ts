@@ -1,6 +1,6 @@
 interface Modal {
   isOpen: boolean;
-  taskId: number | null;
+  taskId: string | null;
 }
 
 interface ModalState {
@@ -18,7 +18,7 @@ export const ModalActions = {
 } as const;
 
 //action creators
-export const openModal = (id: number) => ({
+export const openModal = (id: string) => ({
   type: ModalActions.OPEN_MODAL as typeof ModalActions.OPEN_MODAL,
   payload: id,
 });

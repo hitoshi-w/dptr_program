@@ -1,8 +1,14 @@
 import { User } from 'reducers/userReducer';
 import _ from 'lodash';
 
+function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
+  if (val === undefined || val === null) {
+    throw new Error(`Expected 'val' to be defined, but received ${val}`);
+  }
+}
+
 export interface Task {
-  id: number;
+  id: string;
   statusId: number;
   content: string;
   priority: string;
@@ -11,12 +17,10 @@ export interface Task {
 
 export interface TaskState {
   tasks: Task[];
-  taskId: number;
 }
 
 const initTasks: TaskState = {
   tasks: [],
-  taskId: 0,
 };
 
 export interface TaskList {
@@ -27,7 +31,6 @@ export interface TaskList {
 
 export interface TaskListState {
   taskLists: TaskList[];
-  taskId: number;
 }
 
 export const initTaskList: TaskListState = {
@@ -48,7 +51,6 @@ export const initTaskList: TaskListState = {
       tasks: [],
     },
   ],
-  taskId: 0,
 };
 
 export interface DragIds {
@@ -99,14 +101,14 @@ export const deleteTask = {
   request: (
     currentUser: User,
     params: {
-      id: number;
+      id: string;
       statusId: number;
     },
   ) => ({
     type: TaskActions.DELETE_TASK_REQUEST as typeof TaskActions.DELETE_TASK_REQUEST,
     payload: { currentUser, params },
   }),
-  success: (result: { id: number; statusId: number }) => ({
+  success: (result: { id: string; statusId: number }) => ({
     type: TaskActions.DELETE_TASK_SUCCESS as typeof TaskActions.DELETE_TASK_SUCCESS,
     payload: result,
   }),
@@ -149,7 +151,6 @@ export const taskReducer = (
       return {
         ...state,
         taskLists: action.payload.taskLists,
-        taskId: action.payload.taskId,
       };
     case TaskActions.CREATE_TASK_SUCCESS:
       return {
@@ -163,7 +164,6 @@ export const taskReducer = (
             return taskList;
           }
         }),
-        taskId: action.payload.id + 1,
       };
     case TaskActions.DELETE_TASK_SUCCESS:
       return {
@@ -179,7 +179,6 @@ export const taskReducer = (
             return taskList;
           }
         }),
-        taskId: state.taskId,
       };
     case TaskActions.PUT_TASK_SUCCESS:
       return {
@@ -197,41 +196,38 @@ export const taskReducer = (
             return taskList;
           }
         }),
-        taskId: state.taskId,
       };
-    // case TaskActions.DRAG_TASK:
-    //   const {
-    //     droppableIdStart,
-    //     droppableIdEnd,
-    //     droppableIndexEnd,
-    //     droppableIndexStart,
-    //   } = action.payload;
+    case TaskActions.DRAG_TASK:
+      const {
+        droppableIdStart,
+        droppableIdEnd,
+        droppableIndexEnd,
+        droppableIndexStart,
+      } = action.payload;
 
-    //   if (droppableIdStart === droppableIdEnd) {
-    //     //same list
-    //     const tasks = state.tasks.filter(
-    //       task => task.statusId === parseInt(droppableIdStart),
-    //     );
-    //     const [removed] = tasks.splice(droppableIndexStart, 1);
-    //     tasks.splice(droppableIndexEnd, 0, removed);
-    //     console.log(state);
-    //     return {
-    //       ...state,
-    //       tasks: state.tasks,
-    //       taskId: state.taskId,
-    //     };
-    //   } else {
-    //     //other list
-    //     const listStart = state.tasks.filter(
-    //       task => task.statusId === parseInt(droppableIdStart),
-    //     );
-    //     const [removed] = listStart.splice(droppableIndexStart, 1);
-    //     const tasks = state.tasks.filter(
-    //       task => parseInt(droppableIdEnd) === task.statusId,
-    //     );
-    //     tasks.splice(droppableIndexEnd, 0, removed);
-    //     return { tasks, taskId: state.taskId };
-    //   }
+      if (droppableIdStart === droppableIdEnd) {
+        //same list
+        const taskList = state.taskLists.find(
+          taskList => droppableIdStart === taskList.id.toString(),
+        );
+        assertIsDefined(taskList);
+        const [removed] = taskList.tasks.splice(droppableIndexStart, 1);
+        taskList.tasks.splice(droppableIndexEnd, 0, removed);
+        console.log(taskList.tasks);
+      } else {
+        //other list
+        const taskListStart = state.taskLists.find(
+          taskList => droppableIdStart === taskList.id.toString(),
+        );
+        assertIsDefined(taskListStart);
+        const [removed] = taskListStart.tasks.splice(droppableIndexStart, 1);
+        const taskListEnd = state.taskLists.find(
+          taskList => droppableIdEnd === taskList.id.toString(),
+        );
+        assertIsDefined(taskListEnd);
+        taskListEnd.tasks.splice(droppableIndexEnd, 0, removed);
+      }
+      return { ...state };
     default:
       return state;
   }

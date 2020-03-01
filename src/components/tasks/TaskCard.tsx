@@ -12,7 +12,7 @@ import {
 import styled from 'styled-components';
 
 interface TackCardProps {
-  id: number;
+  id: string;
   index: number;
   statusId: number;
   content: string;
@@ -22,11 +22,11 @@ interface TackCardProps {
   deleteTask: (
     currentUser: User,
     params: {
-      id: number;
+      id: string;
       statusId: number;
     },
   ) => void;
-  openModal: (id: number) => void;
+  openModal: (id: string) => void;
 }
 
 const TaskCard: React.FC<TackCardProps> = ({
@@ -75,7 +75,7 @@ const TaskCard: React.FC<TackCardProps> = ({
   );
 
   return (
-    <Draggable draggableId={id.toString()} index={index}>
+    <Draggable draggableId={id} index={index}>
       {provided => (
         <div
           ref={provided.innerRef}

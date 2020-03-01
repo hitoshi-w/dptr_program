@@ -7,7 +7,6 @@ import { Task, createTask } from 'reducers/taskReducer';
 import { RootState } from 'reducers/rootReducer';
 
 const mapStateToProps = (state: RootState) => ({
-  taskId: state.taskReducer.taskId,
   currentUser: state.userReducer.user,
 });
 

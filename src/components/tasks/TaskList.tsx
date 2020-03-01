@@ -6,6 +6,7 @@ import TaskCard from 'containers/tasks/taskCard';
 import { TaskList, Task } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
 import { Droppable } from 'react-beautiful-dnd';
+import { v4 as uuid } from 'uuid';
 
 import {
   TextField,
@@ -23,7 +24,6 @@ import styled from 'styled-components';
 interface TaskIndexProps {
   taskList: TaskList;
   statusId: number;
-  taskId: number;
   currentUser: User;
   createTask: (currentUser: User, params: Task) => void;
 }
@@ -31,7 +31,6 @@ interface TaskIndexProps {
 const TaskIndex: React.FC<TaskIndexProps> = ({
   taskList,
   statusId,
-  taskId,
   currentUser,
   createTask,
 }) => {
@@ -39,7 +38,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
   const { register, handleSubmit } = useForm<TaskForm>();
   const onSubmit = handleSubmit(({ content, priority, staff }) => {
     const params = {
-      id: taskId,
+      id: uuid(),
       statusId,
       content,
       priority,
@@ -128,7 +127,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
           {form ? <FormComponent /> : <></>}
 
           {taskList.tasks.map((task, index) => (
-            <TaskCard key={index} index={index} {...task} />
+            <TaskCard key={task.id} index={index} {...task} />
           ))}
           {provided.placeholder}
         </ListContainer>

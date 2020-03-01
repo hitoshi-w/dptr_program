@@ -34,7 +34,11 @@ const TaskIndex: React.FC<TaskIndex> = ({ dragTask, taskLists }) => {
       <DragDropContext onDragEnd={onDragEnd}>
         <ListsContainer>
           {taskLists.map((taskList, statusId) => (
-            <_TaskList key={statusId} taskList={taskList} statusId={statusId} />
+            <_TaskList
+              key={taskList.id}
+              taskList={taskList}
+              statusId={statusId}
+            />
           ))}
         </ListsContainer>
       </DragDropContext>

@@ -4,29 +4,39 @@ import { User } from 'reducers/userReducer';
 
 export const readAll = async (currentUser: User) => {
   const docRef = db.collection('taskLists').doc('hello worl');
-  const response = await docRef.collection('0').get();
+  const getNewTask = docRef.collection('0').get();
+  const getWip = docRef.collection('1').get();
+  const getDone = docRef.collection('2').get();
+  const response = await Promise.all([getNewTask, getWip, getDone]);
   const newTask: Task[] = [];
   const wip: Task[] = [];
   const done: Task[] = [];
 
-  response.forEach(doc => {
+  const data = (
+    doc: firebase.firestore.QueryDocumentSnapshot<
+      firebase.firestore.DocumentData
+    >,
+  ) => {
     const data = doc.data();
-    const task = {
+    return {
       id: data.id,
       content: data.content,
       priority: data.priority,
       staff: data.staff,
       statusId: data.statusId,
     };
-    if (task.statusId === 0) {
-      newTask.push(task);
-    }
-    if (task.statusId === 1) {
-      wip.push(task);
-    }
-    if (task.statusId === 2) {
-      done.push(task);
-    }
+  };
+
+  response[0].forEach(doc => {
+    newTask.push(data(doc));
+  });
+
+  response[1].forEach(doc => {
+    wip.push(data(doc));
+  });
+
+  response[2].forEach(doc => {
+    done.push(data(doc));
   });
 
   return {
@@ -47,7 +57,6 @@ export const readAll = async (currentUser: User) => {
         tasks: done,
       },
     ],
-    taskId: newTask.length + wip.length + done.length,
   };
 };
 
@@ -55,7 +64,7 @@ export const createTask = async (currentUser: User, params: Task) => {
   const docRef = db
     .collection('taskLists')
     .doc('hello worl')
-    .collection('0');
+    .collection(`${params.statusId}`);
   await docRef.doc(`${params.id}`).set(params);
   const response = await docRef.doc(`${params.id}`).get();
   return response.data();
@@ -64,14 +73,14 @@ export const createTask = async (currentUser: User, params: Task) => {
 export const deleteTask = async (
   currentUser: User,
   params: {
-    id: number;
+    id: string;
     statusId: number;
   },
 ) => {
   const docRef = db
     .collection('taskLists')
     .doc('hello worl')
-    .collection('0');
+    .collection(`${params.statusId}`);
   await docRef.doc(`${params.id}`).delete();
   return { id: params.id, statusId: params.statusId };
 };
@@ -80,7 +89,7 @@ export const putTask = async (currentUser: User, params: Task) => {
   const docRef = db
     .collection('taskLists')
     .doc('hello worl')
-    .collection('0');
+    .collection(`${params.statusId}`);
   await docRef.doc(`${params.id}`).update({
     content: params.content,
     priority: params.priority,

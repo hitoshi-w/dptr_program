@@ -15,11 +15,11 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   deleteTask: (
     currentUser: User,
     params: {
-      id: number;
+      id: string;
       statusId: number;
     },
   ) => dispatch(deleteTask.request(currentUser, params)),
-  openModal: (id: number) => dispatch(openModal(id)),
+  openModal: (id: string) => dispatch(openModal(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskCard);
