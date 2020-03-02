@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { User } from 'reducers/userReducer';
 import fb from 'config/fbConfig';
 
 import {
@@ -9,9 +10,15 @@ import {
   Menu,
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+import Person from '@material-ui/icons/Person';
 import styled from 'styled-components';
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  currentUser: User;
+  loggedOut: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ currentUser, loggedOut }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -25,6 +32,7 @@ const Navbar: React.FC = () => {
 
   const logout = () => {
     fb.auth().signOut();
+    loggedOut();
   };
 
   const menuId = 'primary-search-account-menu';
@@ -54,14 +62,14 @@ const Navbar: React.FC = () => {
         <_InputBase placeholder="Search..."></_InputBase>
       </Search>
       <div>
-        <IconButton
+        <_IconButton
           aria-label="account of current user"
           aria-controls={menuId}
           aria-haspopup="true"
           onClick={handleProfileMenuOpen}
         >
-          W
-        </IconButton>
+          {currentUser?.name ? currentUser.name.charAt(0) : <Person />}
+        </_IconButton>
       </div>
       {renderMenu}
     </Header>
@@ -92,6 +100,13 @@ const _SearchIcon = styled(SearchIcon)`
 
 const _InputBase = styled(InputBase)`
   width: 240px;
+`;
+
+const _IconButton = styled(IconButton)`
+  display: flex;
+  width: 48px;
+  height: 48px;
+  padding: 0;
 `;
 
 export default Navbar;
