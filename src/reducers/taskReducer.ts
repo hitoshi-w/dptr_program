@@ -13,6 +13,7 @@ export interface Task {
   content: string;
   priority: string;
   staff: string;
+  sortIndex: number;
 }
 
 export interface TaskState {
@@ -71,6 +72,8 @@ export const TaskActions = {
   DELETE_TASK_SUCCESS: 'DELETE_TASK_SUCCESS',
   PUT_TASK_REQUEST: 'PUT_TASK_REQUEST',
   PUT_TASK_SUCCESS: 'PUT_TASK_SUCCESS',
+  PUT_TASKS_REQUEST: 'PUT_TASKS_REQUEST',
+  PUT_TASKS_SUCCESS: 'PUT_TASKS_SUCCESS',
   DRAG_TASK: 'DRAG_TASK',
 } as const;
 
@@ -125,9 +128,19 @@ export const putTask = {
   }),
 };
 
-export const dragTask = (dragIds: DragIds) => ({
+export const putTasks = {
+  request: (currentUser: User, params: TaskList[]) => ({
+    type: TaskActions.PUT_TASKS_REQUEST as typeof TaskActions.PUT_TASKS_REQUEST,
+    payload: { currentUser, params },
+  }),
+  success: () => ({
+    type: TaskActions.PUT_TASKS_SUCCESS as typeof TaskActions.PUT_TASKS_SUCCESS,
+  }),
+};
+
+export const dragTask = (params: DragIds) => ({
   type: TaskActions.DRAG_TASK as typeof TaskActions.DRAG_TASK,
-  payload: dragIds,
+  payload: params,
 });
 
 export type TaskActionTypes =
@@ -139,6 +152,8 @@ export type TaskActionTypes =
   | ReturnType<typeof deleteTask.success>
   | ReturnType<typeof putTask.request>
   | ReturnType<typeof putTask.success>
+  | ReturnType<typeof putTasks.request>
+  | ReturnType<typeof putTasks.success>
   | ReturnType<typeof dragTask>;
 
 //reducers
@@ -208,24 +223,35 @@ export const taskReducer = (
       if (droppableIdStart === droppableIdEnd) {
         //same list
         const taskList = state.taskLists.find(
-          taskList => droppableIdStart === taskList.id.toString(),
+          taskList => parseInt(droppableIdStart) === taskList.id,
         );
         assertIsDefined(taskList);
-        const [removed] = taskList.tasks.splice(droppableIndexStart, 1);
-        taskList.tasks.splice(droppableIndexEnd, 0, removed);
-        console.log(taskList.tasks);
+        const removed = taskList.tasks.splice(droppableIndexStart, 1);
+        taskList.tasks.splice(droppableIndexEnd, 0, ...removed);
+        taskList.tasks.map((task, index) => {
+          task.sortIndex = index;
+        });
       } else {
         //other list
         const taskListStart = state.taskLists.find(
-          taskList => droppableIdStart === taskList.id.toString(),
+          taskList => parseInt(droppableIdStart) === taskList.id,
         );
         assertIsDefined(taskListStart);
-        const [removed] = taskListStart.tasks.splice(droppableIndexStart, 1);
+        const removed = taskListStart.tasks.splice(droppableIndexStart, 1);
+        removed[0].statusId = parseInt(droppableIdEnd);
+
         const taskListEnd = state.taskLists.find(
-          taskList => droppableIdEnd === taskList.id.toString(),
+          taskList => parseInt(droppableIdEnd) === taskList.id,
         );
         assertIsDefined(taskListEnd);
-        taskListEnd.tasks.splice(droppableIndexEnd, 0, removed);
+
+        taskListEnd.tasks.splice(droppableIndexEnd, 0, ...removed);
+        taskListStart.tasks.map((task, index) => {
+          task.sortIndex = index;
+        });
+        taskListEnd.tasks.map((task, index) => {
+          task.sortIndex = index;
+        });
       }
       return { ...state };
     default:

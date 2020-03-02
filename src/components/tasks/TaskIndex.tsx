@@ -3,16 +3,25 @@ import Modal from 'containers/modal';
 import _TaskList from 'containers/tasks/taskList';
 import { TaskList } from 'reducers/taskReducer';
 import { DragIds } from 'reducers/taskReducer';
+import { User } from 'reducers/userReducer';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 import styled from 'styled-components';
+import { PhoneBluetoothSpeakerSharp } from '@material-ui/icons';
 
 interface TaskIndex {
+  currentUser: User;
   taskLists: TaskList[];
   dragTask: (dragIds: DragIds) => void;
+  putTasks: (curretUser: User, taskLists: TaskList[]) => void;
 }
 
-const TaskIndex: React.FC<TaskIndex> = ({ dragTask, taskLists }) => {
+const TaskIndex: React.FC<TaskIndex> = ({
+  dragTask,
+  taskLists,
+  currentUser,
+  putTasks,
+}) => {
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (!destination) {
@@ -26,6 +35,7 @@ const TaskIndex: React.FC<TaskIndex> = ({ dragTask, taskLists }) => {
       draggableId: draggableId,
     };
     dragTask({ ...dragIds });
+    putTasks(currentUser, taskLists);
   };
 
   return (

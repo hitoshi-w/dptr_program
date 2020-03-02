@@ -41,6 +41,7 @@ const TaskEdit: React.SFC<TaskEditProps> = ({ task, currentUser, putTask }) => {
       content,
       staff,
       priority,
+      sortIndex: task.sortIndex,
     };
     putTask(currentUser, params);
   });

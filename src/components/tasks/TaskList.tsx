@@ -43,6 +43,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
       content,
       priority,
       staff,
+      sortIndex: taskList.tasks.length,
     };
     createTask(currentUser, params);
   });

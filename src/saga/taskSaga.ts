@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
 import {
   Task,
   TaskListState,
@@ -7,6 +7,8 @@ import {
   createTask,
   deleteTask,
   putTask,
+  dragTask,
+  putTasks,
 } from 'reducers/taskReducer';
 import * as api from 'saga/api/task';
 
@@ -37,11 +39,18 @@ function* runPutTask(action: ReturnType<typeof putTask.request>) {
   yield put(putTask.success(data));
 }
 
+function* runPutTasks(action: ReturnType<typeof putTasks.request>) {
+  const { params, currentUser } = action.payload;
+  yield call(api.putTasks, currentUser, params);
+  yield put(putTasks.success());
+}
+
 function* watchProject() {
   yield takeLatest(TaskActions.READ_ALL_REQUEST, runReadAll);
   yield takeLatest(TaskActions.CREATE_TASK_REQUEST, runCreateTask);
   yield takeLatest(TaskActions.DELETE_TASK_REQUEST, runDeleteTask);
   yield takeLatest(TaskActions.PUT_TASK_REQUEST, runPutTask);
+  yield takeLatest(TaskActions.PUT_TASKS_REQUEST, runPutTasks);
 }
 
 export default watchProject;
