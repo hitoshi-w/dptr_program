@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import fb from 'config/fbConfig';
 
@@ -15,14 +15,17 @@ interface AppProps {
 }
 
 const App: React.FC<AppProps> = ({ loggedIn, loggedOut, readAll }) => {
+  const [isFeatching, setFeatching] = useState(true);
   useEffect(() => {
     fb.auth().onAuthStateChanged(user => {
       if (user) {
         const currentUser = { id: user.uid, name: user.displayName };
         loggedIn(currentUser);
         readAll(currentUser);
+        setFeatching(false);
       } else {
         loggedOut();
+        setFeatching(false);
       }
     });
   }, [loggedIn, loggedOut, readAll]);
@@ -30,7 +33,11 @@ const App: React.FC<AppProps> = ({ loggedIn, loggedOut, readAll }) => {
   return (
     <BrowserRouter>
       <Switch>
-        <Route exact path="/" component={Home} />
+        <Route
+          exact
+          path="/"
+          render={() => <Home isFeatching={isFeatching} />}
+        />
         <Auth>
           <Navbar />
           <Route path="/tasks" component={TaskIndex} />

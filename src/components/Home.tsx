@@ -4,30 +4,39 @@ import Footer from 'components/layouts/Footer';
 import { User } from 'reducers/userReducer';
 
 import Fab from '@material-ui/core/Fab';
-// import LinearProgress from '@material-ui/core/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import styled from 'styled-components';
 
 export interface HomeProps {
   currentUser: User;
   googleLogin: () => void;
+  isFeatching: boolean;
 }
 
-const Home: React.SFC<HomeProps> = ({ currentUser, googleLogin }) => {
-  return currentUser !== null ? (
-    <Redirect to={'/tasks'} />
-  ) : (
-    <>
-      <HomeContainer>
-        <h1>Taska</h1>
-        <Fab variant="extended" onClick={googleLogin}>
-          Googleではじめる
-        </Fab>
-      </HomeContainer>
-      <FooterContainer>
-        <Footer />
-      </FooterContainer>
-    </>
-  );
+const Home: React.SFC<HomeProps> = ({
+  currentUser,
+  googleLogin,
+  isFeatching,
+}) => {
+  if (isFeatching === true) {
+    return <LinearProgress />;
+  } else if (currentUser !== null && isFeatching === false) {
+    return <Redirect to={'/tasks'} />;
+  } else {
+    return (
+      <>
+        <HomeContainer>
+          <h1>Taska</h1>
+          <Fab variant="extended" onClick={googleLogin}>
+            Googleではじめる
+          </Fab>
+        </HomeContainer>
+        <FooterContainer>
+          <Footer />
+        </FooterContainer>
+      </>
+    );
+  }
 };
 
 const HomeContainer = styled.div`

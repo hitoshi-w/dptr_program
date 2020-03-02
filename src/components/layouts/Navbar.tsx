@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import fb from 'config/fbConfig';
 
 import {
   IconButton,
@@ -22,6 +23,10 @@ const Navbar: React.FC = () => {
     setAnchorEl(null);
   };
 
+  const logout = () => {
+    fb.auth().signOut();
+  };
+
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
     <Menu
@@ -33,7 +38,7 @@ const Navbar: React.FC = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>ログアウト</MenuItem>
+      <MenuItem onClick={logout}>ログアウト</MenuItem>
     </Menu>
   );
 
@@ -88,15 +93,5 @@ const _SearchIcon = styled(SearchIcon)`
 const _InputBase = styled(InputBase)`
   width: 240px;
 `;
-
-// const logout = () => {
-//   fb.auth().signOut();
-// };
-// return (
-//   <div>
-//     <h2>Taska</h2>
-//     <button onClick={logout}>logout</button>
-//   </div>
-// );
 
 export default Navbar;
