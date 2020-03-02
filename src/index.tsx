@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'typeface-roboto';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import styled from 'styled-components';
 import 'index.css';
 
 import { Provider } from 'react-redux';
@@ -21,10 +22,22 @@ const saga = createSagaMiddleware();
 const store = createStore(rootReducer, applyMiddleware(saga));
 saga.run(rootSaga);
 
+const AppContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  max-width: 1200px;
+  min-width: 960px;
+  width: 100%;
+  height: 100vh;
+  margin: 0 auto;
+`;
+
 ReactDOM.render(
   <Provider store={store}>
     <CssBaseline />
-    <App />
+    <AppContainer>
+      <App />
+    </AppContainer>
   </Provider>,
   document.getElementById('root'),
 );
