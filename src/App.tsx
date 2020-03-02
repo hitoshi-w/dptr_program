@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Route, Switch, BrowserRouter } from 'react-router-dom';
+import { Route, Switch, BrowserRouter, Redirect } from 'react-router-dom';
 import fb from 'config/fbConfig';
 
 import Navbar from 'containers/navbar';
@@ -42,6 +42,7 @@ const App: React.FC<AppProps> = ({ loggedIn, loggedOut, readAll }) => {
           <Navbar />
           <Route path="/tasks" component={TaskIndex} />
         </Auth>
+        <Redirect to="/tasks" />
       </Switch>
     </BrowserRouter>
   );

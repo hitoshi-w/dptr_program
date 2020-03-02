@@ -14,31 +14,21 @@ import styled from 'styled-components';
 interface TackCardProps {
   id: string;
   index: number;
-  statusId: number;
   content: string;
   priority: string;
   staff: string;
-  currentUser: User;
-  deleteTask: (
-    currentUser: User,
-    params: {
-      id: string;
-      statusId: number;
-    },
-  ) => void;
   openModal: (id: string) => void;
+  openDialog: (id: string) => void;
 }
 
 const TaskCard: React.FC<TackCardProps> = ({
   id,
   index,
   content,
-  statusId,
   priority,
   staff,
-  currentUser,
-  deleteTask,
   openModal,
+  openDialog,
 }) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -51,11 +41,12 @@ const TaskCard: React.FC<TackCardProps> = ({
   };
 
   const handleDeleteTask = () => {
-    const params = { id, statusId };
-    deleteTask(currentUser, params);
+    setAnchorEl(null);
+    openDialog(id);
   };
 
   const handleOpenModal = () => {
+    setAnchorEl(null);
     openModal(id);
   };
 

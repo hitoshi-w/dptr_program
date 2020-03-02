@@ -1,5 +1,5 @@
 import { db } from 'index';
-import { Task, DragIds, TaskList } from 'reducers/taskReducer';
+import { Task, TaskList } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
 import _ from 'lodash';
 
@@ -111,6 +111,5 @@ export const putTasks = async (currentUser: User, params: TaskList[]) => {
       statusId: task.statusId,
     }),
   );
-  console.log(updateTasks);
   await Promise.all(updateTasks);
 };

@@ -1,4 +1,4 @@
-import { call, put, takeLatest, takeEvery } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import {
   Task,
   TaskListState,
@@ -7,7 +7,6 @@ import {
   createTask,
   deleteTask,
   putTask,
-  dragTask,
   putTasks,
 } from 'reducers/taskReducer';
 import * as api from 'saga/api/task';

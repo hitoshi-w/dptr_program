@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import TaskEdit from 'components/tasks/TaskEdit';
+import AlertDialog from 'components/layouts/AlertDialog';
 import { RootState } from 'reducers/rootReducer';
 import { User } from 'reducers/userReducer';
-import { putTask, Task } from 'reducers/taskReducer';
-import { closeModal } from 'reducers/modalReducer';
+import { deleteTask, Task } from 'reducers/taskReducer';
+import { closeDialog } from 'reducers/dialogReducer';
 
 function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
   if (val === undefined || val === null) {
@@ -21,18 +21,26 @@ const mapStateToProps = (state: RootState) => {
     });
   });
 
-  const task = tasks.find(task => task.id === state.modalReducer.modal.taskId);
+  const task = tasks.find(
+    task => task.id === state.dialogReducer.alertDialog.taskId,
+  );
   assertIsDefined(task);
   return {
     currentUser: state.userReducer.user,
+    isDialog: state.dialogReducer.alertDialog.isDialog,
     task,
   };
 };
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  putTask: (currentUser: User, params: Task) =>
-    dispatch(putTask.request(currentUser, params)),
-  closeModal: () => dispatch(closeModal()),
+  closeDialog: () => dispatch(closeDialog()),
+  deleteTask: (
+    currentUser: User,
+    params: {
+      id: string;
+      statusId: number;
+    },
+  ) => dispatch(deleteTask.request(currentUser, params)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(TaskEdit);
+export default connect(mapStateToProps, mapDispatchToProps)(AlertDialog);

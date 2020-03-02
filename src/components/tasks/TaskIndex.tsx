@@ -1,5 +1,6 @@
 import React from 'react';
 import Modal from 'containers/modal';
+import AlertDialog from 'containers/alertDialog';
 import _TaskList from 'containers/tasks/taskList';
 import { TaskList } from 'reducers/taskReducer';
 import { DragIds } from 'reducers/taskReducer';
@@ -7,7 +8,6 @@ import { User } from 'reducers/userReducer';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 import styled from 'styled-components';
-import { PhoneBluetoothSpeakerSharp } from '@material-ui/icons';
 
 interface TaskIndex {
   currentUser: User;
@@ -41,6 +41,7 @@ const TaskIndex: React.FC<TaskIndex> = ({
   return (
     <>
       <Modal />
+      <AlertDialog />
       <DragDropContext onDragEnd={onDragEnd}>
         <ListsContainer>
           {taskLists.map((taskList, statusId) => (

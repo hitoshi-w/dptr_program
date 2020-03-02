@@ -16,14 +16,6 @@ export interface Task {
   sortIndex: number;
 }
 
-export interface TaskState {
-  tasks: Task[];
-}
-
-const initTasks: TaskState = {
-  tasks: [],
-};
-
 export interface TaskList {
   id: number;
   status: string;
@@ -75,6 +67,7 @@ export const TaskActions = {
   PUT_TASKS_REQUEST: 'PUT_TASKS_REQUEST',
   PUT_TASKS_SUCCESS: 'PUT_TASKS_SUCCESS',
   DRAG_TASK: 'DRAG_TASK',
+  SEARCH_TASK: 'SEARCH_TASK',
 } as const;
 
 //action creators
@@ -143,6 +136,11 @@ export const dragTask = (params: DragIds) => ({
   payload: params,
 });
 
+export const searchTask = (params: string) => ({
+  type: TaskActions.SEARCH_TASK as typeof TaskActions.SEARCH_TASK,
+  payload: params,
+});
+
 export type TaskActionTypes =
   | ReturnType<typeof readAll.request>
   | ReturnType<typeof readAll.success>
@@ -154,7 +152,8 @@ export type TaskActionTypes =
   | ReturnType<typeof putTask.success>
   | ReturnType<typeof putTasks.request>
   | ReturnType<typeof putTasks.success>
-  | ReturnType<typeof dragTask>;
+  | ReturnType<typeof dragTask>
+  | ReturnType<typeof searchTask>;
 
 //reducers
 export const taskReducer = (
@@ -254,6 +253,15 @@ export const taskReducer = (
         });
       }
       return { ...state };
+    case TaskActions.SEARCH_TASK:
+      return {
+        taskLists: state.taskLists.map(taskList => {
+          return {
+            ...taskList,
+            tasks: taskList.tasks.filter(task => task.staff === action.payload),
+          };
+        }),
+      };
     default:
       return state;
   }

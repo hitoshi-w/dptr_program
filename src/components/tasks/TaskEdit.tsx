@@ -25,9 +25,15 @@ interface TaskEditProps {
   task: Task;
   currentUser: User;
   putTask: (currentUser: User, params: Task) => void;
+  closeModal: () => void;
 }
 
-const TaskEdit: React.SFC<TaskEditProps> = ({ task, currentUser, putTask }) => {
+const TaskEdit: React.SFC<TaskEditProps> = ({
+  task,
+  currentUser,
+  putTask,
+  closeModal,
+}) => {
   const { register, handleSubmit } = useForm<TaskForm>();
   const initialValues = {
     content: task.content,
@@ -44,6 +50,7 @@ const TaskEdit: React.SFC<TaskEditProps> = ({ task, currentUser, putTask }) => {
       sortIndex: task.sortIndex,
     };
     putTask(currentUser, params);
+    closeModal();
   });
 
   return (

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { User } from 'reducers/userReducer';
+import { useForm } from 'react-hook-form';
 import fb from 'config/fbConfig';
 
 import {
@@ -16,9 +18,19 @@ import styled from 'styled-components';
 interface NavbarProps {
   currentUser: User;
   loggedOut: () => void;
+  searchTask: (params: string) => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentUser, loggedOut }) => {
+interface SearchForm {
+  searchValue: string;
+}
+
+const Navbar: React.FC<NavbarProps> = ({
+  currentUser,
+  loggedOut,
+  searchTask,
+}) => {
+  const { register, handleSubmit } = useForm<SearchForm>();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
 
@@ -35,13 +47,16 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, loggedOut }) => {
     loggedOut();
   };
 
-  const menuId = 'primary-search-account-menu';
+  const onSubmit = handleSubmit(({ searchValue }) => {
+    searchTask(searchValue);
+  });
+
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
       getContentAnchorEl={null}
-      id={menuId}
+      id="primary-search-account-menu"
       keepMounted
       open={isMenuOpen}
       onClose={handleMenuClose}
@@ -55,16 +70,20 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, loggedOut }) => {
       <Typography variant="h5" noWrap>
         Taska
       </Typography>
-      <Search>
-        <SearchIconBox>
+      <Form onSubmit={onSubmit}>
+        <_InputBase
+          placeholder="Search..."
+          inputRef={register}
+          name="searchValue"
+        />
+        <_IconButton type="submit">
           <_SearchIcon />
-        </SearchIconBox>
-        <_InputBase placeholder="Search..."></_InputBase>
-      </Search>
+        </_IconButton>
+      </Form>
       <div>
         <_IconButton
           aria-label="account of current user"
-          aria-controls={menuId}
+          aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           onClick={handleProfileMenuOpen}
         >
@@ -80,18 +99,13 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 12px;
+  padding: 12px;
 `;
 
-const Search = styled.div`
+const Form = styled.form`
   display: flex;
   border-bottom: 1px solid var(--color-grey-dark-3);
-`;
-
-const SearchIconBox = styled.div`
-  display: flex;
-  align-self: center;
-  margin-right: 4px;
+  align-items: flex-end;
 `;
 
 const _SearchIcon = styled(SearchIcon)`
@@ -104,8 +118,8 @@ const _InputBase = styled(InputBase)`
 
 const _IconButton = styled(IconButton)`
   display: flex;
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   padding: 0;
 `;
 
