@@ -15,7 +15,7 @@ interface TackCardProps {
   id: string;
   index: number;
   content: string;
-  priority: string;
+  priority: number;
   staff: string;
   openModal: (id: string) => void;
   openDialog: (id: string) => void;
@@ -73,7 +73,7 @@ const TaskCard: React.FC<TackCardProps> = ({
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <_Card>
+          <_Card data-priority={priority}>
             <CardBody>
               <Typography>{content}</Typography>
               <_Typography>担当者：{staff}</_Typography>
@@ -105,6 +105,12 @@ const _Card = styled(Card)`
   display: flex;
   margin-bottom: 8px;
   padding: 12px 4px 12px 12px;
+  &[data-priority='1'] {
+    border: 1px solid var(--color-orange);
+    box-shadow: 0px 2px 1px -1px rgba(255, 153, 0, 0.2),
+      0px 1px 1px 0px rgba(255, 153, 0, 0.14),
+      0px 1px 3px 0px rgba(255, 153, 0, 0.12);
+  }
 `;
 
 const CardBody = styled.div`

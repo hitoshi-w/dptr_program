@@ -20,7 +20,7 @@ const data = (
 };
 
 export const readAll = async (currentUser: User) => {
-  const docRef = db.collection('taskLists').doc(`${currentUser}`);
+  const docRef = db.collection('taskLists').doc(`${currentUser?.id}`);
   const response = await docRef.collection('tasks').get();
   const newTask: Task[] = [];
   const wip: Task[] = [];
@@ -63,7 +63,7 @@ export const readAll = async (currentUser: User) => {
 export const createTask = async (currentUser: User, params: Task) => {
   const docRef = db
     .collection('taskLists')
-    .doc(`${currentUser}`)
+    .doc(`${currentUser?.id}`)
     .collection('tasks');
   await docRef.doc(`${params.id}`).set(params);
   const response = await docRef.doc(`${params.id}`).get();
@@ -79,7 +79,7 @@ export const deleteTask = async (
 ) => {
   const docRef = db
     .collection('taskLists')
-    .doc(`${currentUser}`)
+    .doc(`${currentUser?.id}`)
     .collection('tasks');
   await docRef.doc(`${params.id}`).delete();
   return { id: params.id, statusId: params.statusId };
@@ -88,7 +88,7 @@ export const deleteTask = async (
 export const putTask = async (currentUser: User, params: Task) => {
   const docRef = db
     .collection('taskLists')
-    .doc(`${currentUser}`)
+    .doc(`${currentUser?.id}`)
     .collection('tasks');
   await docRef.doc(`${params.id}`).update({
     content: params.content,
@@ -102,7 +102,7 @@ export const putTask = async (currentUser: User, params: Task) => {
 export const putTasks = async (currentUser: User, params: TaskList[]) => {
   const docRef = db
     .collection('taskLists')
-    .doc(`${currentUser}`)
+    .doc(`${currentUser?.id}`)
     .collection('tasks');
   const tasks = [...params[0].tasks, ...params[1].tasks, ...params[2].tasks];
   const updateTasks = tasks.map(task =>

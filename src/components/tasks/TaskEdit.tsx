@@ -46,7 +46,7 @@ const TaskEdit: React.SFC<TaskEditProps> = ({
       statusId: task.statusId,
       content,
       staff,
-      priority,
+      priority: parseInt(priority),
       sortIndex: task.sortIndex,
     };
     putTask(currentUser, params);
@@ -74,11 +74,11 @@ const TaskEdit: React.SFC<TaskEditProps> = ({
         <RadioGroup
           aria-label="priority"
           name="priority-radio"
-          defaultValue={initialValues.priority}
+          defaultValue={`${initialValues.priority}`}
           row
         >
           <FormControlLabel
-            value="highPriority"
+            value="1"
             control={
               <Radio color="primary" inputRef={register} name="priority" />
             }
@@ -86,7 +86,7 @@ const TaskEdit: React.SFC<TaskEditProps> = ({
             labelPlacement="start"
           />
           <FormControlLabel
-            value="lowPriority"
+            value="0"
             control={
               <Radio color="primary" inputRef={register} name="priority" />
             }

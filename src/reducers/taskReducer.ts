@@ -11,7 +11,7 @@ export interface Task {
   id: string;
   statusId: number;
   content: string;
-  priority: string;
+  priority: number;
   staff: string;
   sortIndex: number;
 }

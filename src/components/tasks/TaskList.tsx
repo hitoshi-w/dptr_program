@@ -36,23 +36,27 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
 }) => {
   const [form, setForm] = useState(false);
   const { register, handleSubmit } = useForm<TaskForm>();
-  const onSubmit = handleSubmit(({ content, priority, staff }) => {
-    const params = {
-      id: uuid(),
-      statusId,
-      content,
-      priority,
-      staff,
-      sortIndex: taskList.tasks.length,
-    };
-    createTask(currentUser, params);
-  });
+
   const handleOpen = () => {
     setForm(true);
   };
   const handleClose = () => {
     setForm(false);
   };
+
+  const onSubmit = handleSubmit(({ content, priority, staff }) => {
+    console.log();
+    const params = {
+      id: uuid(),
+      statusId,
+      content,
+      priority: parseInt(priority),
+      staff,
+      sortIndex: taskList.tasks.length,
+    };
+    createTask(currentUser, params);
+    handleClose();
+  });
 
   const FormComponent = () => {
     return (
@@ -73,11 +77,11 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
                 <RadioGroup
                   aria-label="priority"
                   name="priority-radio"
-                  defaultValue="lowPriority"
+                  defaultValue="0"
                   row
                 >
                   <FormControlLabel
-                    value="highPriority"
+                    value="1"
                     control={
                       <Radio
                         color="primary"
@@ -89,7 +93,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    value="lowPriority"
+                    value="0"
                     control={
                       <Radio
                         color="primary"
@@ -123,7 +127,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
         <ListContainer {...provided.droppableProps} ref={provided.innerRef}>
           <ListHead>
             <h2>{taskList.status}</h2>
-            <Icon onClick={handleOpen}>add</Icon>
+            {statusId === 0 ? <Icon onClick={handleOpen}>add</Icon> : <></>}
           </ListHead>
           {form ? <FormComponent /> : <></>}
 
