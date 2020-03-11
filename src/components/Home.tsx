@@ -10,17 +10,17 @@ import styled from 'styled-components';
 export interface HomeProps {
   currentUser: User;
   googleLogin: () => void;
-  isFeatching: boolean;
+  isFetching: boolean;
 }
 
 const Home: React.SFC<HomeProps> = ({
   currentUser,
   googleLogin,
-  isFeatching,
+  isFetching,
 }) => {
-  if (isFeatching === true) {
+  if (isFetching === true) {
     return <LinearProgress />;
-  } else if (currentUser !== null && isFeatching === false) {
+  } else if (currentUser !== null && isFetching === false) {
     return <Redirect to={'/tasks'} />;
   } else {
     return (

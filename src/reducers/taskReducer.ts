@@ -83,9 +83,9 @@ export const readAll = {
 };
 
 export const createTask = {
-  request: (currentUser: User, params: Task) => ({
+  request: (currentUser: User, task: Task) => ({
     type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_REQUEST,
-    payload: { currentUser, params },
+    payload: { currentUser, task },
   }),
   success: (result: Task) => ({
     type: TaskActions.CREATE_TASK_SUCCESS as typeof TaskActions.CREATE_TASK_SUCCESS,
@@ -105,9 +105,9 @@ export const deleteTask = {
 };
 
 export const putTask = {
-  request: (currentUser: User, params: Task) => ({
+  request: (currentUser: User, task: Task) => ({
     type: TaskActions.PUT_TASK_REQUEST as typeof TaskActions.PUT_TASK_REQUEST,
-    payload: { currentUser, params },
+    payload: { currentUser, task },
   }),
   success: (result: Task) => ({
     type: TaskActions.PUT_TASK_SUCCESS as typeof TaskActions.PUT_TASK_SUCCESS,
@@ -116,23 +116,23 @@ export const putTask = {
 };
 
 export const putTasks = {
-  request: (currentUser: User, params: TaskList[]) => ({
+  request: (currentUser: User, taskLists: TaskList[]) => ({
     type: TaskActions.PUT_TASKS_REQUEST as typeof TaskActions.PUT_TASKS_REQUEST,
-    payload: { currentUser, params },
+    payload: { currentUser, taskLists },
   }),
   success: () => ({
     type: TaskActions.PUT_TASKS_SUCCESS as typeof TaskActions.PUT_TASKS_SUCCESS,
   }),
 };
 
-export const dragTask = (params: DragIds) => ({
+export const dragTask = (dragIds: DragIds) => ({
   type: TaskActions.DRAG_TASK as typeof TaskActions.DRAG_TASK,
-  payload: params,
+  payload: dragIds,
 });
 
-export const searchTask = (params: string) => ({
+export const searchTask = (searchValue: string) => ({
   type: TaskActions.SEARCH_TASK as typeof TaskActions.SEARCH_TASK,
-  payload: params,
+  payload: searchValue,
 });
 
 export type TaskActionTypes =

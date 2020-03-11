@@ -39,7 +39,6 @@ const TaskIndex: React.FC<TaskIndex> = ({
     dragTask({ ...dragIds });
     putTasks(currentUser, taskLists);
   };
-  console.log(searchValue);
   return (
     <>
       <Modal />

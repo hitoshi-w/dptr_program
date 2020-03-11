@@ -18,8 +18,8 @@ function* runReadAll(action: ReturnType<typeof readAll.request>) {
 }
 
 function* runCreateTask(action: ReturnType<typeof createTask.request>) {
-  const { params, currentUser } = action.payload;
-  const data: Task = yield call(api.createTask, currentUser, params);
+  const { task, currentUser } = action.payload;
+  const data: Task = yield call(api.createTask, currentUser, task);
   yield put(createTask.success(data));
 }
 
@@ -33,14 +33,14 @@ function* runDeleteTask(action: ReturnType<typeof deleteTask.request>) {
 }
 
 function* runPutTask(action: ReturnType<typeof putTask.request>) {
-  const { params, currentUser } = action.payload;
-  const data: Task = yield call(api.putTask, currentUser, params);
+  const { task, currentUser } = action.payload;
+  const data: Task = yield call(api.putTask, currentUser, task);
   yield put(putTask.success(data));
 }
 
 function* runPutTasks(action: ReturnType<typeof putTasks.request>) {
-  const { params, currentUser } = action.payload;
-  yield call(api.putTasks, currentUser, params);
+  const { taskLists, currentUser } = action.payload;
+  yield call(api.putTasks, currentUser, taskLists);
   yield put(putTasks.success());
 }
 

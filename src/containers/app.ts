@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
 
-import { loggedOut, loggedIn, User } from 'reducers/userReducer';
+import { loggedIn, User } from 'reducers/userReducer';
 import { readAll } from 'reducers/taskReducer';
 import { RootState } from 'reducers/rootReducer';
 import App from 'App';
@@ -11,7 +11,6 @@ const mapStateToProps = (state: RootState) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  loggedOut: () => dispatch(loggedOut()),
   loggedIn: (data: User) => dispatch(loggedIn(data)),
   readAll: (currentUser: User) => dispatch(readAll.request(currentUser)),
 });
