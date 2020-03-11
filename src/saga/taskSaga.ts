@@ -24,11 +24,11 @@ function* runCreateTask(action: ReturnType<typeof createTask.request>) {
 }
 
 function* runDeleteTask(action: ReturnType<typeof deleteTask.request>) {
-  const { params, currentUser } = action.payload;
+  const { task, currentUser } = action.payload;
   const data: {
     id: string;
     statusId: number;
-  } = yield call(api.deleteTask, currentUser, params);
+  } = yield call(api.deleteTask, currentUser, task);
   yield put(deleteTask.success(data));
 }
 

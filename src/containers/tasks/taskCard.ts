@@ -4,10 +4,11 @@ import { Dispatch } from 'redux';
 import TaskCard from 'components/tasks/TaskCard';
 import { openModal } from 'reducers/modalReducer';
 import { openDialog } from 'reducers/dialogReducer';
+import { Task } from 'reducers/taskReducer';
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  openModal: (id: string) => dispatch(openModal(id)),
-  openDialog: (id: string) => dispatch(openDialog(id)),
+  openModal: (task: Task) => dispatch(openModal(task)),
+  openDialog: (task: Task) => dispatch(openDialog(task)),
 });
 
 export default connect(null, mapDispatchToProps)(TaskCard);

@@ -94,15 +94,9 @@ export const createTask = {
 };
 
 export const deleteTask = {
-  request: (
-    currentUser: User,
-    params: {
-      id: string;
-      statusId: number;
-    },
-  ) => ({
+  request: (currentUser: User, task: Task) => ({
     type: TaskActions.DELETE_TASK_REQUEST as typeof TaskActions.DELETE_TASK_REQUEST,
-    payload: { currentUser, params },
+    payload: { currentUser, task },
   }),
   success: (result: { id: string; statusId: number }) => ({
     type: TaskActions.DELETE_TASK_SUCCESS as typeof TaskActions.DELETE_TASK_SUCCESS,
@@ -198,6 +192,7 @@ export const taskReducer = (
       return {
         taskLists: state.taskLists.map(taskList => {
           if (taskList.id === action.payload.statusId) {
+            // taskList.tasks.map(it => it.id)[action.payload.id];
             const target = _.mapKeys(taskList.tasks, 'id')[action.payload.id];
             target.content = action.payload.content;
             target.priority = action.payload.priority;

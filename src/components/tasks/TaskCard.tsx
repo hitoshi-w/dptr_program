@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User } from 'reducers/userReducer';
+import { Task } from 'reducers/taskReducer';
 import { Draggable } from 'react-beautiful-dnd';
 import { MoreVert } from '@material-ui/icons';
 import {
@@ -12,21 +12,15 @@ import {
 import styled from 'styled-components';
 
 interface TackCardProps {
-  id: string;
+  task: Task;
   index: number;
-  content: string;
-  priority: number;
-  staff: string;
-  openModal: (id: string) => void;
-  openDialog: (id: string) => void;
+  openModal: (task: Task) => void;
+  openDialog: (task: Task) => void;
 }
 
 const TaskCard: React.FC<TackCardProps> = ({
-  id,
+  task,
   index,
-  content,
-  priority,
-  staff,
   openModal,
   openDialog,
 }) => {
@@ -42,12 +36,12 @@ const TaskCard: React.FC<TackCardProps> = ({
 
   const handleDeleteTask = () => {
     setAnchorEl(null);
-    openDialog(id);
+    openDialog(task);
   };
 
   const handleOpenModal = () => {
     setAnchorEl(null);
-    openModal(id);
+    openModal(task);
   };
 
   const renderMenu = (
@@ -66,17 +60,17 @@ const TaskCard: React.FC<TackCardProps> = ({
   );
 
   return (
-    <Draggable draggableId={id} index={index}>
+    <Draggable draggableId={task.id} index={index}>
       {provided => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
         >
-          <_Card data-priority={priority}>
+          <_Card data-priority={task.priority}>
             <CardBody>
-              <Typography>{content}</Typography>
-              <_Typography>担当者：{staff}</_Typography>
+              <Typography>{task.content}</Typography>
+              <_Typography>担当者：{task.staff}</_Typography>
             </CardBody>
             <CardIcon>
               <IconButton

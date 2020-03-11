@@ -1,6 +1,8 @@
+import { Task } from 'reducers/taskReducer';
+
 interface AlertDialog {
   isDialog: boolean;
-  taskId: string | null;
+  task: Task | null;
 }
 
 interface DialogState {
@@ -8,7 +10,7 @@ interface DialogState {
 }
 
 const initDialog: DialogState = {
-  alertDialog: { isDialog: false, taskId: null },
+  alertDialog: { isDialog: false, task: null },
 };
 
 //actions
@@ -18,9 +20,9 @@ export const DialogActions = {
 } as const;
 
 //action creators
-export const openDialog = (id: string) => ({
+export const openDialog = (task: Task) => ({
   type: DialogActions.OPEN_DIALOG as typeof DialogActions.OPEN_DIALOG,
-  payload: id,
+  payload: task,
 });
 
 export const closeDialog = () => ({
@@ -39,9 +41,9 @@ export const dialogReducer = (
 ): DialogState => {
   switch (action.type) {
     case DialogActions.OPEN_DIALOG:
-      return { alertDialog: { isDialog: true, taskId: action.payload } };
+      return { alertDialog: { isDialog: true, task: action.payload } };
     case DialogActions.CLOSE_DIALOG:
-      return { alertDialog: { isDialog: false, taskId: null } };
+      return { alertDialog: { isDialog: false, task: null } };
     default:
       return state;
   }

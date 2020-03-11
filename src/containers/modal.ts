@@ -7,6 +7,7 @@ import { closeModal } from 'reducers/modalReducer';
 
 const mapStateToProps = (state: RootState) => ({
   isOpen: state.modalReducer.modal.isOpen,
+  task: state.modalReducer.modal.task,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({

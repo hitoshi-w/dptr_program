@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router-dom';
 import Modal from 'containers/modal';
 import AlertDialog from 'containers/alertDialog';
 import _TaskList from 'containers/tasks/taskList';
@@ -22,6 +23,7 @@ const TaskIndex: React.FC<TaskIndex> = ({
   currentUser,
   putTasks,
 }) => {
+  const { searchValue } = useParams();
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (!destination) {
@@ -37,7 +39,7 @@ const TaskIndex: React.FC<TaskIndex> = ({
     dragTask({ ...dragIds });
     putTasks(currentUser, taskLists);
   };
-
+  console.log(searchValue);
   return (
     <>
       <Modal />

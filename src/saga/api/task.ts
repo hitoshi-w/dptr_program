@@ -70,19 +70,13 @@ export const createTask = async (currentUser: User, params: Task) => {
   return response.data();
 };
 
-export const deleteTask = async (
-  currentUser: User,
-  params: {
-    id: string;
-    statusId: number;
-  },
-) => {
+export const deleteTask = async (currentUser: User, task: Task) => {
   const docRef = db
     .collection('taskLists')
     .doc(`${currentUser?.id}`)
     .collection('tasks');
-  await docRef.doc(`${params.id}`).delete();
-  return { id: params.id, statusId: params.statusId };
+  await docRef.doc(`${task.id}`).delete();
+  return { id: task.id, statusId: task.statusId };
 };
 
 export const putTask = async (currentUser: User, params: Task) => {

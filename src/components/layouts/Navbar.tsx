@@ -32,6 +32,7 @@ const Navbar: React.FC<NavbarProps> = ({
 }) => {
   const { register, handleSubmit } = useForm<SearchForm>();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const history = useHistory();
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -49,6 +50,11 @@ const Navbar: React.FC<NavbarProps> = ({
 
   const onSubmit = handleSubmit(({ searchValue }) => {
     searchTask(searchValue);
+    // history.push({
+    //   pathname: '/tasks',
+    //   search,
+    // });
+    history.push('/tasks/search/:searchValue');
   });
 
   const renderMenu = (

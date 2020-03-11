@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Textarea from 'react-textarea-autosize';
-import { TaskForm } from 'components/tasks/TaskEdit';
 import TaskCard from 'containers/tasks/taskCard';
 import { TaskList, Task } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
@@ -28,6 +27,12 @@ interface TaskIndexProps {
   createTask: (currentUser: User, params: Task) => void;
 }
 
+interface TaskForm {
+  content: string;
+  staff: string;
+  priority: string;
+}
+
 const TaskIndex: React.FC<TaskIndexProps> = ({
   taskList,
   statusId,
@@ -45,8 +50,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
   };
 
   const onSubmit = handleSubmit(({ content, priority, staff }) => {
-    console.log();
-    const params = {
+    const data = {
       id: uuid(),
       statusId,
       content,
@@ -54,7 +58,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
       staff,
       sortIndex: taskList.tasks.length,
     };
-    createTask(currentUser, params);
+    createTask(currentUser, data);
     handleClose();
   });
 
@@ -132,7 +136,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
           {form ? <FormComponent /> : <></>}
 
           {taskList.tasks.map((task, index) => (
-            <TaskCard key={task.id} index={index} {...task} />
+            <TaskCard key={task.id} index={index} task={task} />
           ))}
           {provided.placeholder}
         </ListContainer>

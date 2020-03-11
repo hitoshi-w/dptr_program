@@ -12,15 +12,9 @@ import {
 
 interface AlertDialogProps {
   closeDialog: () => void;
-  deleteTask: (
-    currentUser: User,
-    params: {
-      id: string;
-      statusId: number;
-    },
-  ) => void;
+  deleteTask: (currentUser: User, task: Task) => void;
   isDialog: boolean;
-  task: Task;
+  task: Task | null;
   currentUser: User;
 }
 const AlertDialog: React.SFC<AlertDialogProps> = ({
@@ -30,39 +24,40 @@ const AlertDialog: React.SFC<AlertDialogProps> = ({
   task,
   currentUser,
 }) => {
-  const handleDeleteTask = () => {
-    const params = { id: task.id, statusId: task.statusId };
-    deleteTask(currentUser, params);
-    closeDialog();
-  };
-
-  const handleCloseDialog = () => {
-    closeDialog();
-  };
-
   return (
     <div>
       <Dialog
         open={isDialog}
-        onClose={handleCloseDialog}
+        onClose={closeDialog}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
         <DialogTitle id="alert-dialog-title">{'確認画面'}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            {`タスク内容：「${
-              task ? task.content : '...'
-            }」を本当に削除しますか？`}
+            {task
+              ? `タスク内容：「${task.content}」を本当に削除しますか？`
+              : '該当するデータがありません'}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseDialog} color="primary">
+          <Button onClick={() => closeDialog()} color="primary">
             キャンセル
           </Button>
-          <Button onClick={handleDeleteTask} color="primary" autoFocus>
-            削除する
-          </Button>
+          {task ? (
+            <Button
+              onClick={() => {
+                deleteTask(currentUser, task);
+                closeDialog();
+              }}
+              color="primary"
+              autoFocus
+            >
+              削除する
+            </Button>
+          ) : (
+            <></>
+          )}
         </DialogActions>
       </Dialog>
     </div>
