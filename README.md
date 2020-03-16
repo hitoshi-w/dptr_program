@@ -38,7 +38,7 @@ $ npm start
 - タスク内容、担当者で検索ができる
 
 ## ER Diagram
-![ER diagram](https://user-images.githubusercontent.com/48339549/76759730-9d1c7300-67cf-11ea-8d84-5c2675abb358.png)
+![ER diagram](https://user-images.githubusercontent.com/48339549/76763409-64cc6300-67d6-11ea-8aff-fac41d1ef7e3.png)
 
 
 
