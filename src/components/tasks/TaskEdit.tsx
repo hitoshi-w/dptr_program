@@ -2,7 +2,8 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import Textarea from 'react-textarea-autosize';
 import { User } from 'reducers/userReducer';
-import { Task } from 'reducers/taskReducer';
+import { Task, TaskForm } from 'reducers/taskReducer';
+import { TaskEdit } from 'reducers/taskEditReducer';
 
 import {
   TextField,
@@ -13,92 +14,98 @@ import {
   FormControl,
   FormLabel,
 } from '@material-ui/core';
+import Modal from '@material-ui/core/Modal';
 import styled from 'styled-components';
 
-export interface TaskForm {
-  content: string;
-  staff: string;
-  priority: string;
-}
-
 interface TaskEditProps {
-  task: Task;
+  taskEdit: TaskEdit;
   currentUser: User;
-  putTask: (currentUser: User, params: Task) => void;
+  putTask: (currentUser: User, task: Task) => void;
   closeModal: () => void;
 }
 
-const TaskEdit: React.SFC<TaskEditProps> = ({
-  task,
+const _TaskEdit: React.FC<TaskEditProps> = ({
+  taskEdit,
   currentUser,
   putTask,
   closeModal,
 }) => {
   const { register, handleSubmit } = useForm<TaskForm>();
-  const initialValues = {
-    content: task.content,
-    staff: task.staff,
-    priority: task.priority,
-  };
-  const onSubmit = handleSubmit(({ content, staff, priority }) => {
-    const params = {
-      id: task.id,
-      statusId: task.statusId,
-      content,
-      staff,
-      priority,
-      sortIndex: task.sortIndex,
-    };
-    putTask(currentUser, params);
-    closeModal();
-  });
 
+  const formComponent = (task: Task) => {
+    const onSubmit = handleSubmit(({ content, priority, staff }) => {
+      const data = {
+        ...task,
+        content,
+        staff,
+        priority: parseInt(priority),
+      };
+      putTask(currentUser, data);
+      closeModal();
+    });
+
+    const initialValues = {
+      content: task.content,
+      staff: task.staff,
+      priority: task.priority,
+    };
+
+    return (
+      <Form onSubmit={onSubmit}>
+        <h2>タスク編集</h2>
+        <_Textarea
+          autoFocus
+          minRows={4}
+          inputRef={register}
+          name="content"
+          defaultValue={initialValues.content}
+        />
+        <TextField
+          inputRef={register}
+          label="担当者"
+          name="staff"
+          defaultValue={initialValues.staff}
+        />
+        <FormControl component="fieldset">
+          <FormLabel component="legend">優先度</FormLabel>
+          <RadioGroup
+            aria-label="priority"
+            name="priority-radio"
+            defaultValue={`${initialValues.priority}`}
+            row
+          >
+            <FormControlLabel
+              value="1"
+              control={
+                <Radio color="primary" inputRef={register} name="priority" />
+              }
+              label="高"
+              labelPlacement="start"
+            />
+            <FormControlLabel
+              value="0"
+              control={
+                <Radio color="primary" inputRef={register} name="priority" />
+              }
+              label="低"
+              labelPlacement="start"
+            />
+          </RadioGroup>
+        </FormControl>
+        <Button variant="contained" color="primary" type="submit">
+          更新
+        </Button>
+      </Form>
+    );
+  };
+
+  const task = taskEdit.task;
   return (
-    <Form onSubmit={onSubmit}>
-      <h2>タスク編集</h2>
-      <_Textarea
-        autoFocus
-        minRows={4}
-        inputRef={register}
-        name="content"
-        defaultValue={initialValues.content}
-      />
-      <TextField
-        inputRef={register}
-        label="担当者"
-        name="staff"
-        defaultValue={initialValues.staff}
-      />
-      <FormControl component="fieldset">
-        <FormLabel component="legend">優先度</FormLabel>
-        <RadioGroup
-          aria-label="priority"
-          name="priority-radio"
-          defaultValue={initialValues.priority}
-          row
-        >
-          <FormControlLabel
-            value="highPriority"
-            control={
-              <Radio color="primary" inputRef={register} name="priority" />
-            }
-            label="高"
-            labelPlacement="start"
-          />
-          <FormControlLabel
-            value="lowPriority"
-            control={
-              <Radio color="primary" inputRef={register} name="priority" />
-            }
-            label="低"
-            labelPlacement="start"
-          />
-        </RadioGroup>
-      </FormControl>
-      <Button variant="contained" color="primary" type="submit">
-        更新
-      </Button>
-    </Form>
+    <Modal disableAutoFocus={true} open={taskEdit.isOpen} onClose={closeModal}>
+      <ModalContainer>
+        {task ? formComponent(task) : <p>該当するデータがありません</p>}
+      </ModalContainer>
+    </Modal>
   );
 };
 
@@ -127,4 +134,14 @@ const _Textarea = styled(Textarea)`
   font-size: 16px;
 `;
 
-export default TaskEdit;
+const ModalContainer = styled.div`
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  width: 360px;
+  background-color: #fff;
+  border-radius: 3px;
+`;
+
+export default _TaskEdit;

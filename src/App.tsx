@@ -6,38 +6,31 @@ import Navbar from 'containers/navbar';
 import Home from 'containers/home';
 import Auth from 'containers/auth';
 import TaskIndex from 'containers/tasks/taskIndex';
-import { User } from 'reducers/userReducer';
+import { CurrentUser } from 'reducers/userReducer';
 
 interface AppProps {
-  loggedIn: (currentUser: User) => void;
+  loggedIn: (currentUser: CurrentUser) => void;
   loggedOut: () => void;
-  readAll: (currentUser: User) => void;
 }
 
-const App: React.FC<AppProps> = ({ loggedIn, loggedOut, readAll }) => {
-  const [isFeatching, setFeatching] = useState(true);
+const App: React.FC<AppProps> = ({ loggedIn, loggedOut }) => {
+  const [isFetching, setFetching] = useState(true);
   useEffect(() => {
     fb.auth().onAuthStateChanged(user => {
       if (user) {
         const currentUser = { id: user.uid, name: user.displayName };
         loggedIn(currentUser);
-        readAll(currentUser);
-        setFeatching(false);
+        setFetching(false);
       } else {
         loggedOut();
-        setFeatching(false);
+        setFetching(false);
       }
     });
-  }, [loggedIn, loggedOut, readAll]);
-
+  }, [loggedIn]);
   return (
     <BrowserRouter>
       <Switch>
-        <Route
-          exact
-          path="/"
-          render={() => <Home isFeatching={isFeatching} />}
-        />
+        <Route exact path="/" render={() => <Home isFetching={isFetching} />} />
         <Auth>
           <Navbar />
           <Route path="/tasks" component={TaskIndex} />

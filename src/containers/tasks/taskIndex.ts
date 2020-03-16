@@ -1,19 +1,27 @@
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
+
 import TaskIndex from 'components/tasks/TaskIndex';
-import { RootState } from 'reducers/rootReducer';
-import { dragTask, DragIds, TaskList, putTasks } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
+import {
+  TaskListState,
+  readAll,
+  DragIds,
+  dragTask,
+  searchTask,
+} from 'reducers/taskReducer';
+import { RootState } from 'reducers/rootReducer';
 
 const mapStateToProps = (state: RootState) => ({
-  taskLists: state.taskReducer.taskLists,
   currentUser: state.userReducer.user,
+  taskListState: state.taskReducer,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
+  readAll: (currentUser: User, taskListState: TaskListState) =>
+    dispatch(readAll.request(currentUser, taskListState)),
   dragTask: (dragIds: DragIds) => dispatch(dragTask(dragIds)),
-  putTasks: (currentUser: User, taskLists: TaskList[]) =>
-    dispatch(putTasks.request(currentUser, taskLists)),
+  searchTask: (searchValue: string) => dispatch(searchTask(searchValue)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskIndex);

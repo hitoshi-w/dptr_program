@@ -1,14 +1,14 @@
 import { combineReducers } from 'redux';
 import { userReducer } from 'reducers/userReducer';
 import { taskReducer } from 'reducers/taskReducer';
-import { modalReducer } from './modalReducer';
-import { dialogReducer } from 'reducers/dialogReducer';
+import { taskEditReducer } from 'reducers/taskEditReducer';
+import { taskDeleteReducer } from 'reducers/taskDeleteReducer';
 
 export const rootReducer = combineReducers({
   userReducer,
   taskReducer,
-  modalReducer,
-  dialogReducer,
+  taskEditReducer,
+  taskDeleteReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -1,4 +1,5 @@
 export type User = { id: string; name: string | null } | null;
+export type CurrentUser = { id: string; name: string | null };
 
 interface UserState {
   user: User;

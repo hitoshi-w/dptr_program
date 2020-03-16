@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { User } from 'reducers/userReducer';
 import { useForm } from 'react-hook-form';
-import fb from 'config/fbConfig';
+import { User } from 'reducers/userReducer';
 
 import {
   IconButton,
@@ -17,39 +16,28 @@ import styled from 'styled-components';
 
 interface NavbarProps {
   currentUser: User;
-  loggedOut: () => void;
-  searchTask: (params: string) => void;
+  googleLogOut: () => void;
 }
 
 interface SearchForm {
   searchValue: string;
 }
 
-const Navbar: React.FC<NavbarProps> = ({
-  currentUser,
-  loggedOut,
-  searchTask,
-}) => {
+const Navbar: React.FC<NavbarProps> = ({ currentUser, googleLogOut }) => {
+  const history = useHistory();
+  const handleSearch = (data: SearchForm) => {
+    history.push(`/tasks/search?query=${data.searchValue}`);
+  };
+
   const { register, handleSubmit } = useForm<SearchForm>();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
-
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
-
   const handleMenuClose = () => {
     setAnchorEl(null);
   };
-
-  const logout = () => {
-    fb.auth().signOut();
-    loggedOut();
-  };
-
-  const onSubmit = handleSubmit(({ searchValue }) => {
-    searchTask(searchValue);
-  });
 
   const renderMenu = (
     <Menu
@@ -61,7 +49,7 @@ const Navbar: React.FC<NavbarProps> = ({
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={logout}>ログアウト</MenuItem>
+      <MenuItem onClick={googleLogOut}>ログアウト</MenuItem>
     </Menu>
   );
 
@@ -70,13 +58,13 @@ const Navbar: React.FC<NavbarProps> = ({
       <Typography variant="h5" noWrap>
         Taska
       </Typography>
-      <Form onSubmit={onSubmit}>
+      <Form>
         <_InputBase
           placeholder="Search..."
-          inputRef={register}
+          inputRef={register({ required: true })}
           name="searchValue"
         />
-        <_IconButton type="submit">
+        <_IconButton type="button" onClick={handleSubmit(handleSearch)}>
           <_SearchIcon />
         </_IconButton>
       </Form>

@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import Textarea from 'react-textarea-autosize';
-import { TaskForm } from 'components/tasks/TaskEdit';
-import TaskCard from 'containers/tasks/taskCard';
-import { TaskList, Task } from 'reducers/taskReducer';
-import { User } from 'reducers/userReducer';
-import { Droppable } from 'react-beautiful-dnd';
 import { v4 as uuid } from 'uuid';
+
+import { Task, TaskForm, TaskList } from 'reducers/taskReducer';
+import { User } from 'reducers/userReducer';
 
 import {
   TextField,
@@ -21,14 +19,14 @@ import {
 } from '@material-ui/core';
 import styled from 'styled-components';
 
-interface TaskIndexProps {
+interface TaskNewProps {
   taskList: TaskList;
   statusId: number;
   currentUser: User;
-  createTask: (currentUser: User, params: Task) => void;
+  createTask: (currentUser: User, task: Task) => void;
 }
 
-const TaskIndex: React.FC<TaskIndexProps> = ({
+const TaskNew: React.FC<TaskNewProps> = ({
   taskList,
   statusId,
   currentUser,
@@ -36,23 +34,26 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
 }) => {
   const [form, setForm] = useState(false);
   const { register, handleSubmit } = useForm<TaskForm>();
-  const onSubmit = handleSubmit(({ content, priority, staff }) => {
-    const params = {
-      id: uuid(),
-      statusId,
-      content,
-      priority,
-      staff,
-      sortIndex: taskList.tasks.length,
-    };
-    createTask(currentUser, params);
-  });
+
   const handleOpen = () => {
     setForm(true);
   };
   const handleClose = () => {
     setForm(false);
   };
+
+  const onSubmit = handleSubmit(({ content, priority, staff }) => {
+    const task = {
+      id: uuid(),
+      statusId: 0,
+      content,
+      priority: parseInt(priority),
+      staff,
+      sortIndex: taskList.tasks.length,
+    };
+    createTask(currentUser, task);
+    handleClose();
+  });
 
   const FormComponent = () => {
     return (
@@ -73,11 +74,11 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
                 <RadioGroup
                   aria-label="priority"
                   name="priority-radio"
-                  defaultValue="lowPriority"
+                  defaultValue="0"
                   row
                 >
                   <FormControlLabel
-                    value="highPriority"
+                    value="1"
                     control={
                       <Radio
                         color="primary"
@@ -89,7 +90,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
                     labelPlacement="start"
                   />
                   <FormControlLabel
-                    value="lowPriority"
+                    value="0"
                     control={
                       <Radio
                         color="primary"
@@ -117,23 +118,15 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
       </>
     );
   };
-  return (
-    <Droppable droppableId={statusId.toString()}>
-      {provided => (
-        <ListContainer {...provided.droppableProps} ref={provided.innerRef}>
-          <ListHead>
-            <h2>{taskList.status}</h2>
-            <Icon onClick={handleOpen}>add</Icon>
-          </ListHead>
-          {form ? <FormComponent /> : <></>}
 
-          {taskList.tasks.map((task, index) => (
-            <TaskCard key={task.id} index={index} {...task} />
-          ))}
-          {provided.placeholder}
-        </ListContainer>
-      )}
-    </Droppable>
+  return (
+    <>
+      <ListHead>
+        <h2>{taskList.status}</h2>
+        {statusId === 0 ? <Icon onClick={handleOpen}>add</Icon> : <></>}
+      </ListHead>
+      {form && statusId === 0 ? <FormComponent /> : <></>}
+    </>
   );
 };
 
@@ -145,19 +138,6 @@ const FormBody = styled.div`
   display: flex;
   justify-content: space-around;
   margin-top: 8px;
-`;
-
-const ListContainer = styled.div`
-  flex: 1;
-  background-color: #dfe3e6;
-  border-radius: 3px;
-  border: 1px solid var(--color-light-dark-3);
-  padding: 8px;
-  overflow: scroll;
-  min-height: 400px;
-  &:not(:last-child) {
-    margin-right: 10px;
-  }
 `;
 
 const ListHead = styled.div`
@@ -199,4 +179,4 @@ const _Textarea = styled(Textarea)`
   line-height: 1.5;
 `;
 
-export default TaskIndex;
+export default TaskNew;

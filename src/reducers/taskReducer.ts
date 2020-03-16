@@ -1,17 +1,16 @@
 import { User } from 'reducers/userReducer';
-import _ from 'lodash';
 
-function assertIsDefined<T>(val: T): asserts val is NonNullable<T> {
-  if (val === undefined || val === null) {
-    throw new Error(`Expected 'val' to be defined, but received ${val}`);
-  }
+export interface TaskForm {
+  content: string;
+  priority: string;
+  staff: string;
 }
 
 export interface Task {
   id: string;
   statusId: number;
   content: string;
-  priority: string;
+  priority: number;
   staff: string;
   sortIndex: number;
 }
@@ -24,26 +23,32 @@ export interface TaskList {
 
 export interface TaskListState {
   taskLists: TaskList[];
+  taskSearch: TaskList[];
+  isDragged: boolean;
 }
 
-export const initTaskList: TaskListState = {
-  taskLists: [
-    {
-      status: '着手',
-      id: 0,
-      tasks: [],
-    },
-    {
-      status: '途中',
-      id: 1,
-      tasks: [],
-    },
-    {
-      status: '完了',
-      id: 2,
-      tasks: [],
-    },
-  ],
+const initTaskLists = [
+  {
+    status: '着手',
+    id: 0,
+    tasks: [],
+  },
+  {
+    status: '途中',
+    id: 1,
+    tasks: [],
+  },
+  {
+    status: '完了',
+    id: 2,
+    tasks: [],
+  },
+];
+
+export const initTaskListState: TaskListState = {
+  taskLists: initTaskLists,
+  taskSearch: initTaskLists,
+  isDragged: false,
 };
 
 export interface DragIds {
@@ -64,81 +69,63 @@ export const TaskActions = {
   DELETE_TASK_SUCCESS: 'DELETE_TASK_SUCCESS',
   PUT_TASK_REQUEST: 'PUT_TASK_REQUEST',
   PUT_TASK_SUCCESS: 'PUT_TASK_SUCCESS',
-  PUT_TASKS_REQUEST: 'PUT_TASKS_REQUEST',
-  PUT_TASKS_SUCCESS: 'PUT_TASKS_SUCCESS',
   DRAG_TASK: 'DRAG_TASK',
   SEARCH_TASK: 'SEARCH_TASK',
 } as const;
 
 //action creators
 export const readAll = {
-  request: (currentUser: User) => ({
+  request: (currentUser: User, taskListState: TaskListState) => ({
     type: TaskActions.READ_ALL_REQUEST as typeof TaskActions.READ_ALL_REQUEST,
-    payload: currentUser,
+    payload: { currentUser, taskListState },
   }),
-  success: (result: TaskListState) => ({
+  success: (taskLists: TaskList[]) => ({
     type: TaskActions.READ_ALL_SUCCESS as typeof TaskActions.READ_ALL_SUCCESS,
-    payload: result,
+    payload: taskLists,
   }),
 };
 
 export const createTask = {
-  request: (currentUser: User, params: Task) => ({
+  request: (currentUser: User, task: Task) => ({
     type: TaskActions.CREATE_TASK_REQUEST as typeof TaskActions.CREATE_TASK_REQUEST,
-    payload: { currentUser, params },
+    payload: { currentUser, task },
   }),
-  success: (result: Task) => ({
+  success: (task: Task) => ({
     type: TaskActions.CREATE_TASK_SUCCESS as typeof TaskActions.CREATE_TASK_SUCCESS,
-    payload: result,
-  }),
-};
-
-export const deleteTask = {
-  request: (
-    currentUser: User,
-    params: {
-      id: string;
-      statusId: number;
-    },
-  ) => ({
-    type: TaskActions.DELETE_TASK_REQUEST as typeof TaskActions.DELETE_TASK_REQUEST,
-    payload: { currentUser, params },
-  }),
-  success: (result: { id: string; statusId: number }) => ({
-    type: TaskActions.DELETE_TASK_SUCCESS as typeof TaskActions.DELETE_TASK_SUCCESS,
-    payload: result,
+    payload: task,
   }),
 };
 
 export const putTask = {
-  request: (currentUser: User, params: Task) => ({
+  request: (currentUser: User, task: Task) => ({
     type: TaskActions.PUT_TASK_REQUEST as typeof TaskActions.PUT_TASK_REQUEST,
-    payload: { currentUser, params },
+    payload: { currentUser, task },
   }),
-  success: (result: Task) => ({
+  success: (task: Task) => ({
     type: TaskActions.PUT_TASK_SUCCESS as typeof TaskActions.PUT_TASK_SUCCESS,
-    payload: result,
+    payload: task,
   }),
 };
 
-export const putTasks = {
-  request: (currentUser: User, params: TaskList[]) => ({
-    type: TaskActions.PUT_TASKS_REQUEST as typeof TaskActions.PUT_TASKS_REQUEST,
-    payload: { currentUser, params },
+export const deleteTask = {
+  request: (currentUser: User, task: Task) => ({
+    type: TaskActions.DELETE_TASK_REQUEST as typeof TaskActions.DELETE_TASK_REQUEST,
+    payload: { currentUser, task },
   }),
-  success: () => ({
-    type: TaskActions.PUT_TASKS_SUCCESS as typeof TaskActions.PUT_TASKS_SUCCESS,
+  success: (task: Task) => ({
+    type: TaskActions.DELETE_TASK_SUCCESS as typeof TaskActions.DELETE_TASK_SUCCESS,
+    payload: task,
   }),
 };
 
-export const dragTask = (params: DragIds) => ({
+export const dragTask = (dragIds: DragIds) => ({
   type: TaskActions.DRAG_TASK as typeof TaskActions.DRAG_TASK,
-  payload: params,
+  payload: dragIds,
 });
 
-export const searchTask = (params: string) => ({
+export const searchTask = (searchValue: string) => ({
   type: TaskActions.SEARCH_TASK as typeof TaskActions.SEARCH_TASK,
-  payload: params,
+  payload: searchValue,
 });
 
 export type TaskActionTypes =
@@ -146,28 +133,28 @@ export type TaskActionTypes =
   | ReturnType<typeof readAll.success>
   | ReturnType<typeof createTask.request>
   | ReturnType<typeof createTask.success>
-  | ReturnType<typeof deleteTask.request>
-  | ReturnType<typeof deleteTask.success>
   | ReturnType<typeof putTask.request>
   | ReturnType<typeof putTask.success>
-  | ReturnType<typeof putTasks.request>
-  | ReturnType<typeof putTasks.success>
+  | ReturnType<typeof deleteTask.request>
+  | ReturnType<typeof deleteTask.success>
   | ReturnType<typeof dragTask>
   | ReturnType<typeof searchTask>;
 
 //reducers
 export const taskReducer = (
-  state = initTaskList,
+  state = initTaskListState,
   action: TaskActionTypes,
 ): TaskListState => {
   switch (action.type) {
     case TaskActions.READ_ALL_SUCCESS:
       return {
         ...state,
-        taskLists: action.payload.taskLists,
+        taskLists: action.payload,
+        isDragged: false,
       };
     case TaskActions.CREATE_TASK_SUCCESS:
       return {
+        ...state,
         taskLists: state.taskLists.map(taskList => {
           if (taskList.id === action.payload.statusId) {
             return {
@@ -179,8 +166,29 @@ export const taskReducer = (
           }
         }),
       };
+    case TaskActions.PUT_TASK_SUCCESS:
+      return {
+        ...state,
+        taskLists: state.taskLists.map(taskList => {
+          if (taskList.id === action.payload.statusId) {
+            return {
+              ...taskList,
+              tasks: taskList.tasks.map(task => {
+                if (task.id === action.payload.id) {
+                  return { ...action.payload };
+                } else {
+                  return { ...task };
+                }
+              }),
+            };
+          } else {
+            return taskList;
+          }
+        }),
+      };
     case TaskActions.DELETE_TASK_SUCCESS:
       return {
+        ...state,
         taskLists: state.taskLists.map(taskList => {
           if (taskList.id === action.payload.statusId) {
             return {
@@ -188,23 +196,6 @@ export const taskReducer = (
               tasks: taskList.tasks.filter(
                 task => task.id !== action.payload.id,
               ),
-            };
-          } else {
-            return taskList;
-          }
-        }),
-      };
-    case TaskActions.PUT_TASK_SUCCESS:
-      return {
-        taskLists: state.taskLists.map(taskList => {
-          if (taskList.id === action.payload.statusId) {
-            const target = _.mapKeys(taskList.tasks, 'id')[action.payload.id];
-            target.content = action.payload.content;
-            target.priority = action.payload.priority;
-            target.staff = action.payload.staff;
-            return {
-              ...taskList,
-              tasks: [...taskList.tasks],
             };
           } else {
             return taskList;
@@ -221,44 +212,77 @@ export const taskReducer = (
 
       if (droppableIdStart === droppableIdEnd) {
         //same list
-        const taskList = state.taskLists.find(
-          taskList => parseInt(droppableIdStart) === taskList.id,
-        );
-        assertIsDefined(taskList);
-        const removed = taskList.tasks.splice(droppableIndexStart, 1);
-        taskList.tasks.splice(droppableIndexEnd, 0, ...removed);
-        taskList.tasks.map((task, index) => {
-          task.sortIndex = index;
-        });
+        const tasks = state.taskLists[parseInt(droppableIdStart)].tasks.slice();
+        const removed = tasks.splice(droppableIndexStart, 1);
+        tasks.splice(droppableIndexEnd, 0, ...removed);
+
+        return {
+          ...state,
+          taskLists: state.taskLists.map(taskList => {
+            if (parseInt(droppableIdStart) === taskList.id) {
+              return {
+                ...taskList,
+                tasks: tasks.map((task, index) => ({
+                  ...task,
+                  sortIndex: index,
+                })),
+              };
+            } else {
+              return taskList;
+            }
+          }),
+          isDragged: true,
+        };
       } else {
         //other list
-        const taskListStart = state.taskLists.find(
-          taskList => parseInt(droppableIdStart) === taskList.id,
-        );
-        assertIsDefined(taskListStart);
-        const removed = taskListStart.tasks.splice(droppableIndexStart, 1);
-        removed[0].statusId = parseInt(droppableIdEnd);
-
-        const taskListEnd = state.taskLists.find(
-          taskList => parseInt(droppableIdEnd) === taskList.id,
-        );
-        assertIsDefined(taskListEnd);
-
-        taskListEnd.tasks.splice(droppableIndexEnd, 0, ...removed);
-        taskListStart.tasks.map((task, index) => {
-          task.sortIndex = index;
+        const draggedTasks = state.taskLists[
+          parseInt(droppableIdStart)
+        ].tasks.slice();
+        const droppedTasks = state.taskLists[
+          parseInt(droppableIdEnd)
+        ].tasks.slice();
+        const removed = draggedTasks.splice(droppableIndexStart, 1)[0];
+        droppedTasks.splice(droppableIndexEnd, 0, {
+          ...removed,
+          statusId: parseInt(droppableIdEnd),
         });
-        taskListEnd.tasks.map((task, index) => {
-          task.sortIndex = index;
-        });
+        return {
+          ...state,
+          taskLists: state.taskLists.map(taskList => {
+            if (parseInt(droppableIdStart) === taskList.id) {
+              return {
+                ...taskList,
+                tasks: draggedTasks.map((task, index) => ({
+                  ...task,
+                  sortIndex: index,
+                })),
+              };
+            } else if (parseInt(droppableIdEnd) === taskList.id) {
+              return {
+                ...taskList,
+                tasks: droppedTasks.map((task, index) => ({
+                  ...task,
+                  sortIndex: index,
+                })),
+              };
+            } else {
+              return taskList;
+            }
+          }),
+          isDragged: true,
+        };
       }
-      return { ...state };
     case TaskActions.SEARCH_TASK:
       return {
-        taskLists: state.taskLists.map(taskList => {
+        ...state,
+        taskSearch: state.taskLists.map(taskList => {
           return {
             ...taskList,
-            tasks: taskList.tasks.filter(task => task.staff === action.payload),
+            tasks: taskList.tasks.filter(
+              task =>
+                task.staff.includes(action.payload) ||
+                task.content.includes(action.payload),
+            ),
           };
         }),
       };
