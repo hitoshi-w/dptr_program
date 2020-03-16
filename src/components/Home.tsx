@@ -20,7 +20,7 @@ const Home: React.SFC<HomeProps> = ({
 }) => {
   if (isFetching === true) {
     return <LinearProgress />;
-  } else if (currentUser !== null && isFetching === false) {
+  } else if (currentUser && isFetching === false) {
     return <Redirect to={'/tasks'} />;
   } else {
     return (

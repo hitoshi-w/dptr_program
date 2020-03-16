@@ -1,6 +1,8 @@
 import React from 'react';
 import { Task } from 'reducers/taskReducer';
+import { TaskDelete } from 'reducers/taskDeleteReducer';
 import { User } from 'reducers/userReducer';
+
 import {
   Button,
   Dialog,
@@ -10,25 +12,26 @@ import {
   DialogTitle,
 } from '@material-ui/core';
 
-interface AlertDialogProps {
-  closeDialog: () => void;
-  deleteTask: (currentUser: User, task: Task) => void;
-  isDialog: boolean;
-  task: Task | null;
+interface TaskDeleteProps {
+  taskDelete: TaskDelete;
   currentUser: User;
+  closeTaskDelete: () => void;
+  deleteTask: (currentUser: User, task: Task) => void;
 }
-const AlertDialog: React.SFC<AlertDialogProps> = ({
-  closeDialog,
-  deleteTask,
-  isDialog,
-  task,
+
+const _TaskDelete: React.SFC<TaskDeleteProps> = ({
+  taskDelete,
   currentUser,
+  closeTaskDelete,
+  deleteTask,
 }) => {
+  const task = taskDelete.task;
+
   return (
     <div>
       <Dialog
-        open={isDialog}
-        onClose={closeDialog}
+        open={taskDelete.isOpen}
+        onClose={closeTaskDelete}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
@@ -41,14 +44,14 @@ const AlertDialog: React.SFC<AlertDialogProps> = ({
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => closeDialog()} color="primary">
+          <Button onClick={() => closeTaskDelete()} color="primary">
             キャンセル
           </Button>
           {task ? (
             <Button
               onClick={() => {
                 deleteTask(currentUser, task);
-                closeDialog();
+                closeTaskDelete();
               }}
               color="primary"
               autoFocus
@@ -64,4 +67,4 @@ const AlertDialog: React.SFC<AlertDialogProps> = ({
   );
 };
 
-export default AlertDialog;
+export default _TaskDelete;

@@ -2,7 +2,8 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import Textarea from 'react-textarea-autosize';
 import { User } from 'reducers/userReducer';
-import { Task } from 'reducers/taskReducer';
+import { Task, TaskForm } from 'reducers/taskReducer';
+import { TaskEdit } from 'reducers/taskEditReducer';
 
 import {
   TextField,
@@ -13,40 +14,44 @@ import {
   FormControl,
   FormLabel,
 } from '@material-ui/core';
+import Modal from '@material-ui/core/Modal';
 import styled from 'styled-components';
 
 interface TaskEditProps {
-  task: Task | null;
+  taskEdit: TaskEdit;
   currentUser: User;
-  putTask: (currentUser: User, params: Task) => void;
+  putTask: (currentUser: User, task: Task) => void;
   closeModal: () => void;
 }
 
-const TaskEdit: React.FC<TaskEditProps> = ({
-  task,
+const _TaskEdit: React.FC<TaskEditProps> = ({
+  taskEdit,
   currentUser,
   putTask,
   closeModal,
 }) => {
-  const { register, handleSubmit } = useForm<Task>();
+  const { register, handleSubmit } = useForm<TaskForm>();
 
-  const onSubmit = (data: Task) => {
-    putTask(currentUser, data);
-    closeModal();
-  };
+  const formComponent = (task: Task) => {
+    const onSubmit = handleSubmit(({ content, priority, staff }) => {
+      const data = {
+        ...task,
+        content,
+        staff,
+        priority: parseInt(priority),
+      };
+      putTask(currentUser, data);
+      closeModal();
+    });
 
-  if (task) {
     const initialValues = {
-      id: task.id,
-      statusId: task.statusId,
       content: task.content,
       staff: task.staff,
       priority: task.priority,
-      sortIndex: task.sortIndex,
     };
 
     return (
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={onSubmit}>
         <h2>タスク編集</h2>
         <_Textarea
           autoFocus
@@ -87,32 +92,21 @@ const TaskEdit: React.FC<TaskEditProps> = ({
             />
           </RadioGroup>
         </FormControl>
-        <input
-          name="id"
-          defaultValue={initialValues.id}
-          ref={register}
-          type="hidden"
-        />
-        <input
-          name="statusId"
-          defaultValue={initialValues.statusId}
-          ref={register}
-          type="hidden"
-        />
-        <input
-          name="sortIndex"
-          defaultValue={initialValues.sortIndex}
-          ref={register}
-          type="hidden"
-        />
         <Button variant="contained" color="primary" type="submit">
           更新
         </Button>
       </Form>
     );
-  } else {
-    return <p>該当するデータがありません。</p>;
-  }
+  };
+
+  const task = taskEdit.task;
+  return (
+    <Modal disableAutoFocus={true} open={taskEdit.isOpen} onClose={closeModal}>
+      <ModalContainer>
+        {task ? formComponent(task) : <p>該当するデータがありません</p>}
+      </ModalContainer>
+    </Modal>
+  );
 };
 
 const Form = styled.form`
@@ -140,4 +134,14 @@ const _Textarea = styled(Textarea)`
   font-size: 16px;
 `;
 
-export default TaskEdit;
+const ModalContainer = styled.div`
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  width: 360px;
+  background-color: #fff;
+  border-radius: 3px;
+`;
+
+export default _TaskEdit;

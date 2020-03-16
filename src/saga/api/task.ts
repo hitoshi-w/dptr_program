@@ -1,9 +1,13 @@
 import { db } from 'index';
-import { Task, TaskList } from 'reducers/taskReducer';
+import {
+  Task,
+  TaskListState,
+  TaskList,
+  initTaskListState,
+} from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
-import _ from 'lodash';
 
-const data = (
+const toTaskType = (
   doc: firebase.firestore.QueryDocumentSnapshot<
     firebase.firestore.DocumentData
   >,
@@ -19,95 +23,96 @@ const data = (
   };
 };
 
-export const readAll = async (currentUser: User) => {
-  const docRef = db.collection('taskLists').doc(`${currentUser?.id}`);
-  const response = await docRef.collection('tasks').get();
+const compareSortIndex = (x: Task, y: Task) => {
+  if (x.sortIndex > y.sortIndex) {
+    return 1;
+  } else {
+    return -1;
+  }
+};
+
+const tableRef = (currentUser: User, task: Task) => {
+  return db
+    .collection('taskLists')
+    .doc(`${currentUser?.id}`)
+    .collection('tasks')
+    .doc(`${task.id}`);
+};
+
+export const readAll = async (
+  currentUser: User,
+  taskListState: TaskListState,
+) => {
+  if (taskListState.isDragged) {
+    const taskLists = taskListState.taskLists;
+    const tasks = [
+      ...taskLists[0].tasks,
+      ...taskLists[1].tasks,
+      ...taskLists[2].tasks,
+    ];
+    const updateTasks = tasks.map(task =>
+      tableRef(currentUser, task).update({
+        sortIndex: task.sortIndex,
+        statusId: task.statusId,
+      }),
+    );
+    await Promise.all(updateTasks);
+  }
+
+  const response = await db
+    .collection('taskLists')
+    .doc(`${currentUser?.id}`)
+    .collection('tasks')
+    .get();
   const newTask: Task[] = [];
   const wip: Task[] = [];
   const done: Task[] = [];
 
   response.forEach(doc => {
-    const docData = data(doc);
-    if (docData.statusId === 0) {
-      newTask.push(docData);
+    const taskData = toTaskType(doc);
+    if (taskData.statusId === 0) {
+      newTask.push(taskData);
     }
-    if (docData.statusId === 1) {
-      wip.push(docData);
+    if (taskData.statusId === 1) {
+      wip.push(taskData);
     }
-    if (docData.statusId === 2) {
-      done.push(docData);
+    if (taskData.statusId === 2) {
+      done.push(taskData);
     }
   });
 
-  return {
-    taskLists: [
-      {
-        status: '着手',
-        id: 0,
-        tasks: _.sortBy(newTask, 'sortIndex'),
-      },
-      {
-        status: '途中',
-        id: 1,
-        tasks: _.sortBy(wip, 'sortIndex'),
-      },
-      {
-        status: '完了',
-        id: 2,
-        tasks: _.sortBy(done, 'sortIndex'),
-      },
-    ],
+  const taskStatus = [
+    newTask.sort(compareSortIndex),
+    wip.sort(compareSortIndex),
+    done.sort(compareSortIndex),
+  ];
+
+  const taskListsData = (taskLists: TaskList[]) => {
+    return taskLists.map((taskList, index) => {
+      return { ...taskList, tasks: taskStatus[index] };
+    });
   };
+
+  return taskListsData(initTaskListState.taskLists);
 };
 
 export const createTask = async (currentUser: User, task: Task) => {
-  const docRef = db
-    .collection('taskLists')
-    .doc(`${currentUser?.id}`)
-    .collection('tasks');
-  await docRef.doc(`${task.id}`).set(task);
-  const response = await docRef.doc(`${task.id}`).get();
+  await tableRef(currentUser, task).set(task);
+  const response = await tableRef(currentUser, task).get();
   return response.data();
 };
 
-export const deleteTask = async (currentUser: User, task: Task) => {
-  const docRef = db
-    .collection('taskLists')
-    .doc(`${currentUser?.id}`)
-    .collection('tasks');
-  await docRef.doc(`${task.id}`).delete();
-  return { id: task.id, statusId: task.statusId };
-};
-
 export const putTask = async (currentUser: User, task: Task) => {
-  const docRef = db
-    .collection('taskLists')
-    .doc(`${currentUser?.id}`)
-    .collection('tasks');
-  await docRef.doc(`${task.id}`).update({
+  await tableRef(currentUser, task).update({
     content: task.content,
     priority: task.priority,
     staff: task.staff,
   });
-  const response = await docRef.doc(`${task.id}`).get();
+  const response = await tableRef(currentUser, task).get();
   return response.data();
 };
 
-export const putTasks = async (currentUser: User, taskLists: TaskList[]) => {
-  const docRef = db
-    .collection('taskLists')
-    .doc(`${currentUser?.id}`)
-    .collection('tasks');
-  const tasks = [
-    ...taskLists[0].tasks,
-    ...taskLists[1].tasks,
-    ...taskLists[2].tasks,
-  ];
-  const updateTasks = tasks.map(task =>
-    docRef.doc(`${task.id}`).update({
-      sortIndex: task.sortIndex,
-      statusId: task.statusId,
-    }),
-  );
-  await Promise.all(updateTasks);
+export const deleteTask = async (currentUser: User, task: Task) => {
+  await tableRef(currentUser, task).delete();
+  return task;
 };

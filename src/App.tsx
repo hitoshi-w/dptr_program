@@ -6,26 +6,27 @@ import Navbar from 'containers/navbar';
 import Home from 'containers/home';
 import Auth from 'containers/auth';
 import TaskIndex from 'containers/tasks/taskIndex';
-import { User } from 'reducers/userReducer';
+import { CurrentUser } from 'reducers/userReducer';
 
 interface AppProps {
-  loggedIn: (currentUser: User) => void;
-  readAll: (currentUser: User) => void;
+  loggedIn: (currentUser: CurrentUser) => void;
+  loggedOut: () => void;
 }
 
-const App: React.FC<AppProps> = ({ loggedIn, readAll }) => {
+const App: React.FC<AppProps> = ({ loggedIn, loggedOut }) => {
   const [isFetching, setFetching] = useState(true);
   useEffect(() => {
     fb.auth().onAuthStateChanged(user => {
       if (user) {
         const currentUser = { id: user.uid, name: user.displayName };
         loggedIn(currentUser);
-        readAll(currentUser);
+        setFetching(false);
+      } else {
+        loggedOut();
         setFetching(false);
       }
     });
-  }, [loggedIn, readAll]);
-
+  }, [loggedIn]);
   return (
     <BrowserRouter>
       <Switch>
