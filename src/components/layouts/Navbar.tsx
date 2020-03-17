@@ -88,6 +88,7 @@ const Header = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 12px;
+  min-width: 1100px;
 `;
 
 const Form = styled.form`
