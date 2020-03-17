@@ -120,13 +120,13 @@ const TaskNew: React.FC<TaskNewProps> = ({
   };
 
   return (
-    <>
+    <div>
       <ListHead>
         <h2>{taskList.status}</h2>
         {statusId === 0 ? <Icon onClick={handleOpen}>add</Icon> : <></>}
       </ListHead>
       {form && statusId === 0 ? <FormComponent /> : <></>}
-    </>
+    </div>
   );
 };
 

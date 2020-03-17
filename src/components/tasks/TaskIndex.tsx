@@ -67,28 +67,30 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
             <ListContainer {...provided.droppableProps} ref={provided.innerRef}>
               <TaskNew taskList={taskList} statusId={statusId} />
 
-              {taskList.tasks.map((task, index) => (
-                <Draggable draggableId={task.id} index={index} key={task.id}>
-                  {provided => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                    >
-                      <_Card data-priority={task.priority}>
-                        <CardBody>
-                          <Typography>{task.content}</Typography>
-                          <_Typography>
-                            担当者：
-                            {task.staff}
-                          </_Typography>
-                        </CardBody>
-                        <EditDeleteMenu task={task} />
-                      </_Card>
-                    </div>
-                  )}
-                </Draggable>
-              ))}
+              <Tasks>
+                {taskList.tasks.map((task, index) => (
+                  <Draggable draggableId={task.id} index={index} key={task.id}>
+                    {provided => (
+                      <div
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                      >
+                        <_Card data-priority={task.priority}>
+                          <CardBody>
+                            <Typography>{task.content}</Typography>
+                            <_Typography>
+                              担当者：
+                              {task.staff}
+                            </_Typography>
+                          </CardBody>
+                          <EditDeleteMenu task={task} />
+                        </_Card>
+                      </div>
+                    )}
+                  </Draggable>
+                ))}
+              </Tasks>
 
               {provided.placeholder}
             </ListContainer>
@@ -116,22 +118,30 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
 const ListsContainer = styled.div`
   display: flex;
   flex-direction: row;
-  flex-grow: 1;
-  flex-shrink: 0;
+  flex: 1;
   margin: 10px 0;
+  overflow: hidden;
+  height: 0;
+  width: 100%;
 `;
 
 const ListContainer = styled.div`
-  flex: 1;
+  display: flex;
+  flex-direction: column;
   background-color: #dfe3e6;
   border-radius: 3px;
   border: 1px solid var(--color-light-dark-3);
   padding: 8px;
-  overflow: scroll;
-  min-height: 400px;
+  min-width: 360px;
+  width: 100%;
   &:not(:last-child) {
     margin-right: 10px;
   }
+`;
+
+const Tasks = styled.div`
+  flex: 1;
+  overflow: auto;
 `;
 
 const _Card = styled(Card)`
