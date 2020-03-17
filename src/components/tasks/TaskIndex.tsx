@@ -121,7 +121,6 @@ const ListsContainer = styled.div`
   flex: 1;
   margin: 10px 0;
   overflow: hidden;
-  height: 0;
   width: 100%;
 `;
 
