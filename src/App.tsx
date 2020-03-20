@@ -26,7 +26,7 @@ const App: React.FC<AppProps> = ({ loggedIn, loggedOut }) => {
         setFetching(false);
       }
     });
-  }, [loggedIn]);
+  }, [loggedIn, loggedOut]);
   return (
     <BrowserRouter>
       <Switch>

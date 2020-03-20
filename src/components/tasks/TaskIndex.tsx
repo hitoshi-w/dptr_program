@@ -64,10 +64,13 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
       return (
         <Droppable droppableId={statusId.toString()} key={statusId}>
           {provided => (
-            <ListContainer {...provided.droppableProps} ref={provided.innerRef}>
+            <StyledTaskList
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+            >
               <TaskNew taskList={taskList} statusId={statusId} />
 
-              <Tasks>
+              <StyledTasks>
                 {taskList.tasks.map((task, index) => (
                   <Draggable draggableId={task.id} index={index} key={task.id}>
                     {provided => (
@@ -76,24 +79,24 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        <_Card data-priority={task.priority}>
-                          <CardBody>
+                        <StyledCard data-priority={task.priority}>
+                          <StyledCardBody>
                             <Typography>{task.content}</Typography>
-                            <_Typography>
+                            <StyledTypography>
                               担当者：
                               {task.staff}
-                            </_Typography>
-                          </CardBody>
+                            </StyledTypography>
+                          </StyledCardBody>
                           <EditDeleteMenu task={task} />
-                        </_Card>
+                        </StyledCard>
                       </div>
                     )}
                   </Draggable>
                 ))}
-              </Tasks>
+              </StyledTasks>
 
               {provided.placeholder}
-            </ListContainer>
+            </StyledTaskList>
           )}
         </Droppable>
       );
@@ -105,17 +108,17 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
       <TaskEdit />
       <TaskDelete />
       <DragDropContext onDragEnd={onDragEnd}>
-        <ListsContainer>
+        <StyledTaskLists>
           {location.search
             ? listsComponent(taskListState.taskSearch)
             : listsComponent(taskListState.taskLists)}
-        </ListsContainer>
+        </StyledTaskLists>
       </DragDropContext>
     </>
   );
 };
 
-const ListsContainer = styled.div`
+const StyledTaskLists = styled.div`
   display: flex;
   flex-direction: row;
   flex: 1;
@@ -124,7 +127,7 @@ const ListsContainer = styled.div`
   width: 100%;
 `;
 
-const ListContainer = styled.div`
+const StyledTaskList = styled.div`
   display: flex;
   flex-direction: column;
   background-color: #dfe3e6;
@@ -138,12 +141,12 @@ const ListContainer = styled.div`
   }
 `;
 
-const Tasks = styled.div`
+const StyledTasks = styled.div`
   flex: 1;
   overflow: auto;
 `;
 
-const _Card = styled(Card)`
+const StyledCard = styled(Card)`
   display: flex;
   margin-bottom: 8px;
   padding: 12px 4px 12px 12px;
@@ -155,7 +158,7 @@ const _Card = styled(Card)`
   }
 `;
 
-const CardBody = styled.div`
+const StyledCardBody = styled.div`
   flex: 1 0 300px;
   white-space: pre-wrap;
   overflow-wrap: break-word;
@@ -163,7 +166,7 @@ const CardBody = styled.div`
   box-sizing: border-box;
 `;
 
-const _Typography = styled(Typography)`
+const StyledTypography = styled(Typography)`
   margin-top: 8px;
   color: var(--color-grey-dark-2);
   font-size: 12px;

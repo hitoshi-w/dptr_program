@@ -54,36 +54,36 @@ const Navbar: React.FC<NavbarProps> = ({ currentUser, googleLogOut }) => {
   );
 
   return (
-    <Header>
+    <StyledHeader>
       <Typography variant="h5" noWrap>
         Taska
       </Typography>
-      <Form>
-        <_InputBase
+      <StyledForm>
+        <StyledInputBase
           placeholder="Search..."
           inputRef={register({ required: true })}
           name="searchValue"
         />
-        <_IconButton type="button" onClick={handleSubmit(handleSearch)}>
-          <_SearchIcon />
-        </_IconButton>
-      </Form>
+        <StyledIconButton type="button" onClick={handleSubmit(handleSearch)}>
+          <StyledSearchIcon />
+        </StyledIconButton>
+      </StyledForm>
       <div>
-        <_IconButton
+        <StyledIconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           onClick={handleProfileMenuOpen}
         >
           {currentUser?.name ? currentUser.name.charAt(0) : <Person />}
-        </_IconButton>
+        </StyledIconButton>
       </div>
       {renderMenu}
-    </Header>
+    </StyledHeader>
   );
 };
 
-const Header = styled.div`
+const StyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -91,21 +91,21 @@ const Header = styled.div`
   min-width: 1100px;
 `;
 
-const Form = styled.form`
+const StyledForm = styled.form`
   display: flex;
   border-bottom: 1px solid var(--color-grey-dark-3);
   align-items: flex-end;
 `;
 
-const _SearchIcon = styled(SearchIcon)`
+const StyledSearchIcon = styled(SearchIcon)`
   color: var(--color-grey-dark-2);
 `;
 
-const _InputBase = styled(InputBase)`
+const StyledInputBase = styled(InputBase)`
   width: 240px;
 `;
 
-const _IconButton = styled(IconButton)`
+const StyledIconButton = styled(IconButton)`
   display: flex;
   width: 40px;
   height: 40px;

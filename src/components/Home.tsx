@@ -25,21 +25,21 @@ const Home: React.SFC<HomeProps> = ({
   } else {
     return (
       <>
-        <HomeContainer>
+        <StyledHome>
           <h1>Taska</h1>
           <Fab variant="extended" onClick={googleLogin}>
             Googleではじめる
           </Fab>
-        </HomeContainer>
-        <FooterContainer>
+        </StyledHome>
+        <StyledFooter>
           <Footer />
-        </FooterContainer>
+        </StyledFooter>
       </>
     );
   }
 };
 
-const HomeContainer = styled.div`
+const StyledHome = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -47,7 +47,7 @@ const HomeContainer = styled.div`
   flex: 1;
 `;
 
-const FooterContainer = styled.div`
+const StyledFooter = styled.div`
   align-self: center;
 `;
 

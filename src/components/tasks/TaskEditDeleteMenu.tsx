@@ -46,14 +46,14 @@ const TaskEditDeleteMenu: React.FC<TaskEditDeleteMenuProps> = ({
       open={Boolean(anchorEl)}
       onClose={handleCloseMenu}
     >
-      <_MenuItem onClick={handleOpenModal}>更新</_MenuItem>
-      <_MenuItem onClick={handleDeleteTask}>削除</_MenuItem>
+      <StyledMenuItem onClick={handleOpenModal}>更新</StyledMenuItem>
+      <StyledMenuItem onClick={handleDeleteTask}>削除</StyledMenuItem>
     </Menu>
   );
 
   return (
     <>
-      <CardIcon>
+      <StyledCardIcon>
         <IconButton
           aria-controls="simple-menu"
           aria-haspopup="true"
@@ -62,18 +62,18 @@ const TaskEditDeleteMenu: React.FC<TaskEditDeleteMenuProps> = ({
         >
           <MoreVert fontSize="small" />
         </IconButton>
-      </CardIcon>
+      </StyledCardIcon>
       {renderMenu}
     </>
   );
 };
 
-const _MenuItem = styled(MenuItem)`
+const StyledMenuItem = styled(MenuItem)`
   padding-left: 20px;
   padding-right: 20px;
 `;
 
-const CardIcon = styled.div`
+const StyledCardIcon = styled.div`
   flex: 0 0 44px;
   align-self: flex-start;
   margin-left: 4px;

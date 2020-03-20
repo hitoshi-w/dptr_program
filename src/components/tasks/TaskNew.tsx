@@ -58,16 +58,16 @@ const TaskNew: React.FC<TaskNewProps> = ({
   const FormComponent = () => {
     return (
       <>
-        <Form onSubmit={onSubmit}>
-          <_Card>
-            <_Textarea
+        <StyledForm onSubmit={onSubmit}>
+          <StyledCard>
+            <StyledTextarea
               autoFocus
               placeholder="タスクを入力"
               minRows={4}
               inputRef={register}
               name="content"
             />
-            <FormBody>
+            <StyledFormBody>
               <TextField inputRef={register} label="担当者" name="staff" />
               <FormControl component="fieldset">
                 <FormLabel component="legend">優先度</FormLabel>
@@ -103,44 +103,44 @@ const TaskNew: React.FC<TaskNewProps> = ({
                   />
                 </RadioGroup>
               </FormControl>
-            </FormBody>
-          </_Card>
+            </StyledFormBody>
+          </StyledCard>
 
-          <FormButton>
-            <_Button type="submit" variant="contained" color="primary">
+          <StyledFormButton>
+            <StyledButton type="submit" variant="contained" color="primary">
               タスク作成
-            </_Button>
-            <_Button onClick={handleClose} variant="contained">
+            </StyledButton>
+            <StyledButton onClick={handleClose} variant="contained">
               キャンセル
-            </_Button>
-          </FormButton>
-        </Form>
+            </StyledButton>
+          </StyledFormButton>
+        </StyledForm>
       </>
     );
   };
 
   return (
     <div>
-      <ListHead>
+      <StyledListHead>
         <h2>{taskList.status}</h2>
         {statusId === 0 ? <Icon onClick={handleOpen}>add</Icon> : <></>}
-      </ListHead>
+      </StyledListHead>
       {form && statusId === 0 ? <FormComponent /> : <></>}
     </div>
   );
 };
 
-const Form = styled.form`
+const StyledForm = styled.form`
   margin-bottom: 8px;
 `;
 
-const FormBody = styled.div`
+const StyledFormBody = styled.div`
   display: flex;
   justify-content: space-around;
   margin-top: 8px;
 `;
 
-const ListHead = styled.div`
+const StyledListHead = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -153,24 +153,24 @@ const ListHead = styled.div`
   }
 `;
 
-const FormButton = styled.div`
+const StyledFormButton = styled.div`
   display: flex;
   margin-top: 8px;
 `;
 
-const _Button = styled(Button)`
+const StyledButton = styled(Button)`
   flex: 1;
   &:not(:last-child) {
     margin-right: 4px;
   }
 `;
 
-const _Card = styled(Card)`
+const StyledCard = styled(Card)`
   min-height: 80px;
   padding: 6px 8px 2px;
 `;
 
-const _Textarea = styled(Textarea)`
+const StyledTextarea = styled(Textarea)`
   resize: none;
   width: 100%;
   border: 1px solid var(--color-light-dark-3);

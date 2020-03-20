@@ -24,7 +24,7 @@ interface TaskEditProps {
   closeModal: () => void;
 }
 
-const _TaskEdit: React.FC<TaskEditProps> = ({
+const TaskEditFC: React.FC<TaskEditProps> = ({
   taskEdit,
   currentUser,
   putTask,
@@ -51,9 +51,9 @@ const _TaskEdit: React.FC<TaskEditProps> = ({
     };
 
     return (
-      <Form onSubmit={onSubmit}>
+      <StyledForm onSubmit={onSubmit}>
         <h2>タスク編集</h2>
-        <_Textarea
+        <StyledTextarea
           autoFocus
           minRows={4}
           inputRef={register}
@@ -95,21 +95,21 @@ const _TaskEdit: React.FC<TaskEditProps> = ({
         <Button variant="contained" color="primary" type="submit">
           更新
         </Button>
-      </Form>
+      </StyledForm>
     );
   };
 
   const task = taskEdit.task;
   return (
     <Modal disableAutoFocus={true} open={taskEdit.isOpen} onClose={closeModal}>
-      <ModalContainer>
+      <StyledModal>
         {task ? formComponent(task) : <p>該当するデータがありません</p>}
-      </ModalContainer>
+      </StyledModal>
     </Modal>
   );
 };
 
-const Form = styled.form`
+const StyledForm = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -124,7 +124,7 @@ const Form = styled.form`
   }
 `;
 
-const _Textarea = styled(Textarea)`
+const StyledTextarea = styled(Textarea)`
   resize: none;
   width: 100%;
   border: 1px solid var(--color-light-dark-3);
@@ -134,7 +134,7 @@ const _Textarea = styled(Textarea)`
   font-size: 16px;
 `;
 
-const ModalContainer = styled.div`
+const StyledModal = styled.div`
   top: 40%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -144,4 +144,4 @@ const ModalContainer = styled.div`
   border-radius: 3px;
 `;
 
-export default _TaskEdit;
+export default TaskEditFC;
