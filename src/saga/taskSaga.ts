@@ -11,8 +11,8 @@ import {
 import * as api from 'saga/api/task';
 
 function* runReadAll(action: ReturnType<typeof readAll.request>) {
-  const { taskListState, currentUser } = action.payload;
-  const data: TaskList[] = yield call(api.readAll, currentUser, taskListState);
+  const { currentUser, taskState } = action.payload;
+  const data: TaskList[] = yield call(api.readAll, currentUser, taskState);
   yield put(readAll.success(data));
 }
 

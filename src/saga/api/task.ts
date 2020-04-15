@@ -1,16 +1,9 @@
 import { db } from 'index';
-import {
-  Task,
-  TaskListState,
-  TaskList,
-  initTaskListState,
-} from 'reducers/taskReducer';
+import { Task, TaskList, initTaskListState } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
 
 const toTaskType = (
-  doc: firebase.firestore.QueryDocumentSnapshot<
-    firebase.firestore.DocumentData
-  >,
+  doc: firebase.firestore.QueryDocumentSnapshot<firebase.firestore.DocumentData>
 ) => {
   const data = doc.data();
   return {
@@ -41,20 +34,14 @@ const tableRef = (currentUser: User, task: Task) => {
 
 export const readAll = async (
   currentUser: User,
-  taskListState: TaskListState,
+  taskState: { tasks: Task[]; isDragged: boolean }
 ) => {
-  if (taskListState.isDragged) {
-    const taskLists = taskListState.taskLists;
-    const tasks = [
-      ...taskLists[0].tasks,
-      ...taskLists[1].tasks,
-      ...taskLists[2].tasks,
-    ];
-    const updateTasks = tasks.map(task =>
+  if (taskState.isDragged) {
+    const updateTasks = taskState.tasks.map(task =>
       tableRef(currentUser, task).update({
         sortIndex: task.sortIndex,
         statusId: task.statusId,
-      }),
+      })
     );
     await Promise.all(updateTasks);
   }

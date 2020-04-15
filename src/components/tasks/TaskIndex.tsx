@@ -6,27 +6,35 @@ import {
   Draggable,
 } from 'react-beautiful-dnd';
 import { useLocation, useHistory } from 'react-router-dom';
-
 import TaskEdit from 'containers/tasks/taskEdit';
 import TaskDelete from 'containers/tasks/taskDelete';
 import TaskNew from 'containers/tasks/taskNew';
 import EditDeleteMenu from 'containers/tasks/taskEditDeleteMenu';
-import { TaskListState, TaskList, DragIds } from 'reducers/taskReducer';
+import { TaskList, DragIds, Task } from 'reducers/taskReducer';
 import { User } from 'reducers/userReducer';
 
 import { Card, Typography } from '@material-ui/core';
 import styled from 'styled-components';
 
 interface TaskIndexProps {
-  taskListState: TaskListState;
+  taskLists: TaskList[];
+  taskSearch: TaskList[];
+  isDragged: boolean;
+  tasks: Task[];
   currentUser: User;
-  readAll: (currentUser: User, taskListState: TaskListState) => void;
+  readAll: (
+    currentUser: User,
+    taskState: { tasks: Task[]; isDragged: boolean }
+  ) => void;
   searchTask: (searchValue: string) => void;
   dragTask: (dragIds: DragIds) => void;
 }
 
 const TaskIndex: React.FC<TaskIndexProps> = ({
-  taskListState,
+  taskLists,
+  taskSearch,
+  isDragged,
+  tasks,
   currentUser,
   readAll,
   searchTask,
@@ -34,16 +42,18 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
 }) => {
   const location = useLocation();
   const history = useHistory();
+
   useEffect(() => {
-    readAll(currentUser, taskListState);
     history.listen(location => {
       const searchValue = location.search.match(/[^?query=]+/);
       if (searchValue) {
         searchTask(searchValue[0]);
       }
     });
-  }, [readAll, taskListState.isDragged, searchTask]);
 
+    readAll(currentUser, { tasks, isDragged });
+  }, [tasks, isDragged, currentUser, readAll, history, searchTask]);
+  console.log('a');
   const onDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
     if (!destination) {
@@ -83,8 +93,7 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
                           <StyledCardBody>
                             <Typography>{task.content}</Typography>
                             <StyledTypography>
-                              担当者：
-                              {task.staff}
+                              担当者：{task.staff}
                             </StyledTypography>
                           </StyledCardBody>
                           <EditDeleteMenu task={task} />
@@ -110,8 +119,8 @@ const TaskIndex: React.FC<TaskIndexProps> = ({
       <DragDropContext onDragEnd={onDragEnd}>
         <StyledTaskLists>
           {location.search
-            ? listsComponent(taskListState.taskSearch)
-            : listsComponent(taskListState.taskLists)}
+            ? listsComponent(taskLists)
+            : listsComponent(taskSearch)}
         </StyledTaskLists>
       </DragDropContext>
     </>
@@ -170,6 +179,9 @@ const StyledTypography = styled(Typography)`
   margin-top: 8px;
   color: var(--color-grey-dark-2);
   font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
 
 export default TaskIndex;

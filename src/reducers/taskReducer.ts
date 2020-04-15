@@ -65,19 +65,22 @@ export const TaskActions = {
   READ_ALL_SUCCESS: 'READ_ALL_SUCCESS',
   CREATE_TASK_REQUEST: 'CREATE_TASK_REQUEST',
   CREATE_TASK_SUCCESS: 'CREATE_TASK_SUCCESS',
-  DELETE_TASK_REQUEST: 'DELETE_TASK_REQUEST',
-  DELETE_TASK_SUCCESS: 'DELETE_TASK_SUCCESS',
   PUT_TASK_REQUEST: 'PUT_TASK_REQUEST',
   PUT_TASK_SUCCESS: 'PUT_TASK_SUCCESS',
+  DELETE_TASK_REQUEST: 'DELETE_TASK_REQUEST',
+  DELETE_TASK_SUCCESS: 'DELETE_TASK_SUCCESS',
   DRAG_TASK: 'DRAG_TASK',
   SEARCH_TASK: 'SEARCH_TASK',
 } as const;
 
 //action creators
 export const readAll = {
-  request: (currentUser: User, taskListState: TaskListState) => ({
+  request: (
+    currentUser: User,
+    taskState: { tasks: Task[]; isDragged: boolean },
+  ) => ({
     type: TaskActions.READ_ALL_REQUEST as typeof TaskActions.READ_ALL_REQUEST,
-    payload: { currentUser, taskListState },
+    payload: { currentUser, taskState },
   }),
   success: (taskLists: TaskList[]) => ({
     type: TaskActions.READ_ALL_SUCCESS as typeof TaskActions.READ_ALL_SUCCESS,

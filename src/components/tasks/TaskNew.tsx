@@ -64,7 +64,7 @@ const TaskNew: React.FC<TaskNewProps> = ({
               autoFocus
               placeholder="タスクを入力"
               minRows={4}
-              inputRef={register}
+              inputRef={register({ required: true })}
               name="content"
             />
             <StyledFormBody>
